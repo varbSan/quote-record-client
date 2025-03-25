@@ -12,8 +12,8 @@
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "codegen": "graphql-codegen --config codegen.ts",
-    "codegen:watch": "graphql-codegen --config codegen.ts --watch \"src/**/*.{query,mutation,subscription}.ts\""
+    "codegen": "graphql-codegen-esm --config codegen.ts",
+    "codegen:watch": "graphql-codegen-esm --watch \"../../bergline/bergline-svr/schema.gql\" \"src/**/*.{query,mutation,subscription}.ts\""
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",
@@ -29,8 +29,8 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
-    "@graphql-codegen/cli": "^5.0.5",
-    "@graphql-codegen/client-preset": "4.6.3",
+    "@graphql-codegen/cli": "5.0.5",
+    "@graphql-codegen/client-preset": "4.7.0",
     "@graphql-codegen/introspection": "4.0.3",
     "@parcel/watcher": "^2.5.1",
     "@tsconfig/node22": "^22.0.0",
