@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-
+import ui from '@nuxt/ui/vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -9,6 +9,14 @@ export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
+    ui({
+      ui: {
+        colors: {
+          primary: 'indigo',
+          neutral: 'zinc',
+        },
+      },
+    }),
   ],
   resolve: {
     alias: {

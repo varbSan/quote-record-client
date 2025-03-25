@@ -1,11 +1,20 @@
-import './assets/main.css'
+import ui from '@nuxt/ui/vue-plugin'
 
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
+import { registerApollo } from './api/apollo'
 import App from './App.vue'
 import router from './router'
+import './assets/main.css'
 
-const app = createApp(App)
+const app = createApp({
+  render: () => h(App),
+})
 
 app.use(router)
+app.use(ui)
 
-app.mount('#app')
+registerApollo(app);
+
+(async () => {
+  app.mount('#app')
+})()

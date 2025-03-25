@@ -1,3 +1,14 @@
+# apollo generated
+src/gql
+
+# Auto-generated type declarations
+auto-imports.d.ts
+components.d.ts
+
+# environment variables
+.env
+.env.production.local
+
 # Logs
 logs
 *.log
@@ -16,6 +27,7 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+
 
 # Editor directories and files
 .vscode/*
