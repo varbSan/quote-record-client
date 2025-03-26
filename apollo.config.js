@@ -2,7 +2,7 @@
 export default {
   client: {
     service: {
-      name: 'bergline-app',
+      name: 'diamonds-client',
       // URL to the GraphQL API
       url: 'http://localhost:3000/graphql',
     },

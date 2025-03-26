@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "vite & npm run codegen:watch",
+    "dev:desktop": "npx tauri dev",
+    "dev:ios": "npx tauri ios dev 'iPhone 16'",
+    "tauri": "npx tauri",
     "lint": "eslint . --fix",
     "prebuild": "npm run codegen",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -13,7 +16,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "codegen": "graphql-codegen-esm --config codegen.ts",
-    "codegen:watch": "graphql-codegen-esm --watch \"../../bergline/bergline-svr/schema.gql\" \"src/**/*.{query,mutation,subscription}.ts\""
+    "codegen:watch": "graphql-codegen-esm --watch '../../bergline/bergline-svr/schema.gql' 'src/**/*.{query,mutation,subscription}.ts'"
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",
@@ -33,6 +36,7 @@
     "@graphql-codegen/client-preset": "4.7.0",
     "@graphql-codegen/introspection": "4.0.3",
     "@parcel/watcher": "^2.5.1",
+    "@tauri-apps/cli": "^2.4.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.13.9",
