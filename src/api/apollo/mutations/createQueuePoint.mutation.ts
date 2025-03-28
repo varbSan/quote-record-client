@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client/core'
+import { graphql } from '@/gql'
 
-export const CREATE_QUEUE_POINT_MUTATION = gql`
+export const CREATE_QUEUE_POINT_MUTATION = graphql(`
   mutation CreateQueuePoint($row: Int!) {
     createQueuePoint(row: $row) {
       id
     }
   }
-`
+`)

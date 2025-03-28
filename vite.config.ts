@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import ui from '@nuxt/ui/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 
 const host = process.env.TAURI_DEV_HOST
 
@@ -11,7 +11,7 @@ const host = process.env.TAURI_DEV_HOST
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    // vueDevTools(),
     ui({
       ui: {
         colors: {

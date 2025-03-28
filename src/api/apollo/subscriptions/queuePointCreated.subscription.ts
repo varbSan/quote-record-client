@@ -1,10 +1,10 @@
-import { gql } from '@apollo/client/core'
+import { graphql } from '@/gql'
 
-export const QUEUE_POINT_CREATED_SUBSCRIPTION = gql`
+export const QUEUE_POINT_CREATED_SUBSCRIPTION = graphql(`
   subscription QueuePointCreated {
     queuePointCreated {
       id
       row
     }
   }
-`
+`)
