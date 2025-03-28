@@ -12,7 +12,7 @@ const fooError = ref()
 
 async function handleCreate() {
   try {
-    await mutate({ row: 4 }, { update: (cache) => cache.evict({fieldName: 'getLastQueuePoint'})})
+    await mutate({ row: 4 }, { update: cache => cache.evict({ fieldName: 'getLastQueuePoint' }) })
   }
   catch (err) {
     fooError.value = err
