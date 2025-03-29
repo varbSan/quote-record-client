@@ -31,8 +31,8 @@ async function handleCreate() {
     <UButton :loading="queryLoading" @click="refetch">
       refetch
     </UButton>
-    {{ fooError.name }}
-    {{ fooError.message }}
-    {{ fooError.stack }}
+    {{ fooError?.name ?? '' }}
+    {{ fooError?.message ?? '' }}
+    {{ fooError?.stack ?? '' }}
   </UApp>
 </template>
