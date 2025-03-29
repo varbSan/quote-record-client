@@ -53,18 +53,18 @@
         "isOneOf": null,
         "fields": [
           {
-            "name": "createQueuePoint",
+            "name": "createQuoteRecord",
             "description": null,
             "args": [
               {
-                "name": "row",
+                "name": "text",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
+                    "name": "String",
                     "ofType": null
                   }
                 },
@@ -78,7 +78,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QueuePointType",
+                "name": "QuoteRecordType",
                 "ofType": null
               }
             },
@@ -98,7 +98,7 @@
         "isOneOf": null,
         "fields": [
           {
-            "name": "getLastQueuePoint",
+            "name": "getLastQuoteRecord",
             "description": null,
             "args": [],
             "type": {
@@ -106,7 +106,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QueuePointType",
+                "name": "QuoteRecordType",
                 "ofType": null
               }
             },
@@ -137,7 +137,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "QueuePointType",
+        "name": "QuoteRecordType",
         "description": null,
         "isOneOf": null,
         "fields": [
@@ -174,7 +174,7 @@
             "deprecationReason": null
           },
           {
-            "name": "row",
+            "name": "text",
             "description": null,
             "args": [],
             "type": {
@@ -182,7 +182,23 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updatedAt",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "DateTime",
                 "ofType": null
               }
             },
@@ -213,7 +229,7 @@
         "isOneOf": null,
         "fields": [
           {
-            "name": "queuePointCreated",
+            "name": "quoteRecordCreated",
             "description": null,
             "args": [],
             "type": {
@@ -221,7 +237,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QueuePointType",
+                "name": "QuoteRecordType",
                 "ofType": null
               }
             },

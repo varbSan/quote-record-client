@@ -2,19 +2,19 @@
 import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable'
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
-import { CREATE_QUEUE_POINT_MUTATION } from './api/apollo/mutations/createQueuePoint.mutation'
-import { GET_LAST_QUEUE_POINT_QUERY } from './api/apollo/queries/getLastQueuePoint.query'
-import { QUEUE_POINT_CREATED_SUBSCRIPTION } from './api/apollo/subscriptions/queuePointCreated.subscription'
+import { CREATE_QUOTE_RECORD_MUTATION } from './api/apollo/mutations/createQuoteRecord.mutation'
+import { GET_LAST_QUOTE_RECORD_QUERY } from './api/apollo/queries/getLastQuoteRecord.query'
+import { QUOTE_RECORD_CREATED_SUBSCRIPTION } from './api/apollo/subscriptions/quoteRecordCreated.subscription'
 
-const { result, loading: queryLoading, refetch, error: resultError } = useQuery(GET_LAST_QUEUE_POINT_QUERY)
-const { mutate, loading: mutationLoading, error: mutationError } = useMutation(CREATE_QUEUE_POINT_MUTATION)
-const { result: resultSubscription } = useSubscription(QUEUE_POINT_CREATED_SUBSCRIPTION)
+const { result, loading: queryLoading, refetch, error: resultError } = useQuery(GET_LAST_QUOTE_RECORD_QUERY)
+const { mutate, loading: mutationLoading, error: mutationError } = useMutation(CREATE_QUOTE_RECORD_MUTATION)
+const { result: resultSubscription } = useSubscription(QUOTE_RECORD_CREATED_SUBSCRIPTION)
 
 const fooError = ref()
 
 async function handleCreate() {
   try {
-    await mutate({ row: 4 })
+    await mutate({ text: 'Hello World' })
   }
   catch (err) {
     fooError.value = resultError.value ?? mutationError.value ?? err
@@ -26,7 +26,7 @@ async function handleCreate() {
   <UApp>
     <RouterView />
     <br>
-    {{ resultSubscription?.queuePointCreated.id }}
+    {{ resultSubscription?.quoteRecordCreated.text }}
     <br>
 
     <UButton :loading="mutationLoading" @click="handleCreate">
@@ -37,7 +37,7 @@ async function handleCreate() {
       refetch
     </UButton>
     <br>
-    {{ result?.getLastQueuePoint }}
+    {{ result?.getLastQuoteRecord }}
     <br>
     <br>
     {{ fooError?.name ?? '' }}
