@@ -44,7 +44,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput v-model="state.text" type="text" />
     </UFormField>
 
-    <div class="flex w-full justify-end mt-auto">
+    <div class="flex justify-end mt-auto">
       <UButton :loading="createQuoteRecordLoading" type="submit">
         Create quote
       </UButton>

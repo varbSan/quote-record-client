@@ -7,7 +7,7 @@ import VwCreateQuote from './views/VwCreateQuote.vue'
 import VwCreateUser from './views/VwCreateUser.vue'
 import VwFileUpload from './views/VwFileUpload.vue'
 
-const { result: resultQuery } = useQuery(GET_RANDOM_QUOTE_RECORD_QUERY)
+const { result: resultQuery, refetch: refetchQuery, loading } = useQuery(GET_RANDOM_QUOTE_RECORD_QUERY)
 const { result: resultSubscription } = useSubscription(QUOTE_RECORD_CREATED_SUBSCRIPTION)
 
 const randomTextQuote = computed(
@@ -23,9 +23,16 @@ watch(resultSubscription, () => {
 <template>
   <main class="flex flex-col">
     <section class="flex justify-center mx-6">
-      <p class="space-y-4 border-2 p-4">
-        {{ randomTextQuote }}
-      </p>
+      <div class="flex flex-col space-y-4 border-2 p-4">
+        <p>
+          {{ randomTextQuote }}
+        </p>
+        <div class="flex justify-end mt-auto">
+          <UButton @click="refetchQuery" :loading="loading">
+            Refetch
+          </UButton>
+        </div>
+      </div>
     </section>
     <div class="grid md:grid-cols-3 gap-6 m-6">
       <VwCreateUser class="space-y-4 border-2 p-4" />

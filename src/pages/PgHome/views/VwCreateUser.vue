@@ -53,8 +53,8 @@ async function onSubmitUser(event: FormSubmitEvent<Schema>) {
       <UInput v-model="state.lastName" type="text" />
     </UFormField>
 
-    <div class="flex w-full justify-end mt-auto">
-      <UButton type="submit" :loading="createUserLoading">
+    <div class="flex justify-end mt-auto">
+      <UButton type="submit" :loading="createUserLoading" class="self-end">
         Create user
       </UButton>
     </div>

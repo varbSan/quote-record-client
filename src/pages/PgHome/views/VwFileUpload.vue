@@ -56,7 +56,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
       <UInput type="file" @change="handleFileChange" />
     </UFormField>
 
-    <div class="flex w-full justify-end mt-auto">
+    <div class="flex justify-end mt-auto">
       <UButton type="submit" :loading="fileUploading">
         Upload file
       </UButton>
