@@ -1,6 +1,6 @@
 import VwUserAgreement from '@/pages/PgAbout/views/VwUserAgreement.vue'
 import VwUserPrivacyNotice from '@/pages/PgAbout/views/VwUserPrivacyNotice.vue'
-import { createRouter, createWebHistory, type RouteRecord, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import PgHome from '../pages/PgHome/PgHome.vue'
 
 export const routes = [
@@ -9,7 +9,7 @@ export const routes = [
     name: 'home',
     component: PgHome,
     // beforeEnter: authGuard,
-    meta: { label: 'Home' },
+    meta: { label: 'Home', icon: 'i-lucide-home' },
   },
   {
     path: '/about',
@@ -20,7 +20,7 @@ export const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/PgAbout/PgAbout.vue'),
     // beforeEnter: authGuard,
-    meta: { label: 'About' },
+    meta: { label: 'About', icon: 'i-lucide-about' },
     children: [
       {
         name: 'userAgreement',
