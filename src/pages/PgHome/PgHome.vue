@@ -21,7 +21,7 @@ watch(resultSubscription, () => {
 </script>
 
 <template>
-  <main class="flex flex-col">
+  <main>
     <section class="flex justify-center mx-6">
       <div class="flex flex-col space-y-4 border-2 p-4">
         <p>
@@ -34,10 +34,10 @@ watch(resultSubscription, () => {
         </div>
       </div>
     </section>
-    <div class="grid md:grid-cols-3 gap-6 m-6">
+    <section class="grid md:grid-cols-3 gap-6 m-6">
       <VwCreateUser class="space-y-4 border-2 p-4" />
       <VwCreateQuote class="space-y-4 border-2 p-4" />
       <VwFileUpload class="space-y-4 border-2 p-4" />
-    </div>
+    </section>
   </main>
 </template>

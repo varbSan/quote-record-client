@@ -48,20 +48,13 @@ async function onSubmitUser(event: FormSubmitEvent<Schema>) {
     <UFormField label="Username" name="username">
       <UInput v-model="state.username" type="text" />
     </UFormField>
-
-
-        <!--
-          Links for ToS and Cookies are set to the same one of Privacy Policy.
-          ToS needs its own page, and Cookie Policy is present on the Privacy Policy page (maybe add anchor on the page so it scrolls to the Cookie Policies).
-          Needs DE translation.
-          -->
     <div class="flex flex-col justify-end mt-auto">
       <p class="text-xs">
-        By clicking 
-        <span class="font-bold">Create User</span> you agree to our 
+        By selecting
+        <span class="font-bold">Create user</span> you agree to our
         <ULink class="" :to="{ name: 'userAgreement' }">
           User agreement
-        </ULink> and acknowledge reading our 
+        </ULink> and acknowledge reading our
         <ULink :to="{ name: 'userPrivacyNotice' }">
           User Privacy Notice
         </ULink>

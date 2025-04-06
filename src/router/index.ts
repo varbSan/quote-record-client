@@ -1,14 +1,16 @@
 import VwUserAgreement from '@/pages/PgAbout/views/VwUserAgreement.vue'
 import VwUserPrivacyNotice from '@/pages/PgAbout/views/VwUserPrivacyNotice.vue'
+import PgSignin from '@/pages/PgSignin/PgSignin.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import PgHome from '../pages/PgHome/PgHome.vue'
+import { authGuard } from './guards/authGuard'
 
 export const routes = [
   {
     path: '/',
     name: 'home',
     component: PgHome,
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     meta: { label: 'Home', icon: 'i-lucide-home' },
   },
   {
@@ -19,7 +21,7 @@ export const routes = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/PgAbout/PgAbout.vue'),
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     meta: { label: 'About', icon: 'i-lucide-about' },
     children: [
       {
@@ -35,6 +37,12 @@ export const routes = [
         meta: { label: 'User Privacy Notice', icon: 'i-lucide-book-open-text' },
       },
     ],
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: PgSignin,
+    meta: { label: 'Signin', icon: 'i-lucide-signin' },
   },
 ]
 
