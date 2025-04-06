@@ -1,15 +1,26 @@
+<script setup lang="ts">
+import router, { routes } from '@/router';
+import type { TabsItem } from '@nuxt/ui'
+import { ref, watch } from 'vue'
+
+const items = ref<TabsItem[]>(
+  routes
+    ?.find(route => route.name === 'about')
+    ?.children
+    ?.map((child) => ({label: child.meta.label, value: child.name, icon: child.meta.icon})) 
+    ?? []
+)
+
+const active = ref(router.currentRoute.value.name)
+
+watch(active, () => {
+  router.push({ name: active.value as string })
+})
+</script>
+
 <template>
-  <div class="flex flex-col">
-    <div class="grid grid-cols-3 gap-6 m-6">
-      <div class="space-y-4 border-2 p-4">
-        Interesting info 1
-      </div>
-      <div class="space-y-4 border-2 p-4">
-        Interesting info 2
-      </div>
-      <div class="space-y-4 border-2 p-4">
-        Interesting info 3
-      </div>
-    </div>
+  <div class="flex justify-center">
+    <UTabs v-model="active" :items="items"/>
   </div>
+  <RouterView />
 </template>

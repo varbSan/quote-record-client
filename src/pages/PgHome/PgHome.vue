@@ -28,7 +28,7 @@ watch(resultSubscription, () => {
           {{ randomTextQuote }}
         </p>
         <div class="flex justify-end mt-auto">
-          <UButton @click="refetchQuery" :loading="loading">
+          <UButton :loading="loading" @click="refetchQuery">
             Refetch
           </UButton>
         </div>

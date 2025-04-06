@@ -5,8 +5,8 @@ export const CREATE_USER_MUTATION = graphql(`
     createUser(createUserInput: $createUserInput) {
       id
       email
-      firstName
-      lastName
+      username
+      tosAcceptedAt
       createdAt
       updatedAt
     }
