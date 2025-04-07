@@ -6,7 +6,7 @@ const isDevelopment = process.env.VITE_NODE_ENV === 'development'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: isDevelopment ? process.env.VITE_API_URL : './graphql.schema.json',
+  schema: isDevelopment ? process.env.VITE_SCHEMA_PATH : './graphql.schema.json',
   documents: ['src/**/*.{query,mutation,subscription}.ts'],
   ignoreNoDocuments: true,
   generates: {
