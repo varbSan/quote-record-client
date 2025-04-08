@@ -17,7 +17,6 @@ const toast = useToast()
 const schema = v.object({
   email: v.pipe(v.string(), v.email('Please provide a valid email adress'), v.maxLength(250, 'Please enter an email that is less than 250 characters')),
   username: v.pipe(v.string(), v.maxLength(250, 'Please enter a username that is less than 250 characters')),
-  tosAcceptedAt: v.boolean('Please accept terms of service'),
 })
 
 type Schema = v.InferOutput<typeof schema>
@@ -25,7 +24,6 @@ type Schema = v.InferOutput<typeof schema>
 const state = reactive<Schema>({
   email: '',
   username: '',
-  tosAcceptedAt: true,
 })
 
 async function onSubmitUser(event: FormSubmitEvent<Schema>) {

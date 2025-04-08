@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
-import router, { routes } from '@/router'
+import router from '@/router'
+import { routes } from '@/router/routes'
 import { ref, watch } from 'vue'
 
 const activeView = ref(router.currentRoute.value.name)
@@ -12,7 +13,7 @@ const viewItems = ref<TabsItem[]>(
   routes
     ?.find(route => route.name === 'about')
     ?.children
-    ?.map(child => ({ label: child.meta.label, value: child.name, icon: child.meta.icon }))
+    ?.map(child => ({ label: child.meta?.label as string, value: child.name as string, icon: child.meta?.icon as string }))
     ?? [],
 )
 </script>

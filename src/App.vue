@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useAuth } from '@clerk/vue'
 import { RouterView } from 'vue-router'
+import { useCurrentUser } from './composables/useCurrentUser'
 import TheFooter from './TheFooter.vue'
 import TheHeader from './TheHeader.vue'
 
-const { isLoaded } = useAuth()
+const { isAuthLoaded } = useCurrentUser()
 </script>
 
 <template>
   <UApp>
-    <div v-if="isLoaded" class="flex flex-col h-[100dvh]">
+    <div v-if="isAuthLoaded" class="flex flex-col h-[100dvh]">
       <TheHeader />
       <RouterView />
       <TheFooter class="mt-auto" />

@@ -48,14 +48,14 @@
             "deprecationReason": null
           },
           {
-            "name": "tosAcceptedAt",
+            "name": "sub",
             "description": null,
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "DateTime",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -190,6 +190,22 @@
         "description": null,
         "isOneOf": null,
         "fields": [
+          {
+            "name": "getCurrentUser",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserType",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "getLastQuoteRecord",
             "description": null,
@@ -447,7 +463,7 @@
             "deprecationReason": null
           },
           {
-            "name": "tosAcceptedAt",
+            "name": "sub",
             "description": null,
             "args": [],
             "type": {
@@ -455,7 +471,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "DateTime",
+                "name": "String",
                 "ofType": null
               }
             },

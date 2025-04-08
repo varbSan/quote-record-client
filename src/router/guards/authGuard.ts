@@ -1,16 +1,13 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { clerk } from '@/main'
+import { auth } from '@/api/auth'
 
-export async function authGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
+export function authGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
   try {
-    await clerk.load()
-    if (clerk.isSignedIn) {
+    if (auth.isSignedIn || to.meta.isPublic) {
       next()
     }
-    else {
-      next({ name: 'signin' })
-    }
-  } catch (err) {
+  }
+  catch (err) {
     console.error(err)
     next(false)
   }
