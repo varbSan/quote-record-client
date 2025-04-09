@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { useAuth } from '@clerk/vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import * as v from 'valibot'
 import { reactive, ref } from 'vue'
 
 const fileUploading = ref(false)
 const toast = useToast()
+const { getToken } = useAuth()
 
 const schema = v.object({
   file: v.pipe(
@@ -35,6 +37,9 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
 
   const response = await fetch(import.meta.env.VITE_API_URL_FILE_UPLOAD, {
     method: 'POST',
+    headers: {
+      Authorization: `Bearer ${await getToken.value() ?? ''}`,
+    },
     body: formData, // Pass the FormData as the body
   })
   const json = await response.json()
