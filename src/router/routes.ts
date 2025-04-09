@@ -9,7 +9,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'home',
     component: PgHome,
-    meta: { label: 'Home', icon: 'i-lucide-home' },
+    meta: { label: 'Dashboard', icon: 'i-lucide-home' },
   },
   {
     path: '/about',
@@ -19,7 +19,7 @@ export const routes: RouteRecordRaw[] = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/PgAbout/PgAbout.vue'),
-    meta: { label: 'About', icon: 'i-lucide-about' },
+    meta: { label: 'About', icon: 'i-lucide-info' },
     children: [
       {
         name: 'userAgreement',
@@ -39,6 +39,6 @@ export const routes: RouteRecordRaw[] = [
     path: '/signin',
     name: 'signin',
     component: PgSignin,
-    meta: { label: 'Signin', icon: 'i-lucide-signin', isPublic: true },
+    meta: { label: 'Signin', icon: 'i-lucide-circle-user-round', isPublic: true },
   },
 ]
