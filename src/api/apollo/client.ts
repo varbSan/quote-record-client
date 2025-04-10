@@ -1,56 +1,56 @@
 import { ApolloClient, createHttpLink, InMemoryCache, split } from '@apollo/client/core'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions' // <-- This one uses graphql-ws
+import { setContext } from '@apollo/client/link/context'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 import { auth, initAuth } from '../auth'
 
-// eslint-disable-next-line antfu/no-top-level-await
-await initAuth()
+export async function createApolloClient() {
+  await initAuth()
 
-// HTTP connection to the API
-const httpLink = createHttpLink({
-  // You should use an absolute URL here
-  uri: import.meta.env.VITE_API_URL,
-  headers: {
-    // eslint-disable-next-line antfu/no-top-level-await
-    Authorization: `Bearer ${(await auth.session?.getToken()) ?? ''}`, // Add Clerk token
-  },
-})
+  const httpLink = createHttpLink({
+    uri: import.meta.env.VITE_API_URL,
+  })
 
-// Create a GraphQLWsLink link:
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: import.meta.env.VITE_API_URL_WS,
-    connectionParams: async () => {
-      return {
-        headers: {
-          Authorization: `Bearer ${(await auth.session?.getToken()) ?? ''}`,
-        },
-      }
+  const authLink = setContext(async (_, { headers }) => {
+    const token = await auth.session?.getToken()
+    return {
+      headers: {
+        ...headers,
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+    }
+  })
+
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: import.meta.env.VITE_API_URL_WS,
+      connectionParams: async () => {
+        return {
+          headers: {
+            Authorization: `Bearer ${(await auth.session?.getToken()) ?? ''}`,
+          },
+        }
+      },
+    }),
+  )
+
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return (
+        definition.kind === 'OperationDefinition'
+        && definition.operation === 'subscription'
+      )
     },
-  }),
-)
+    wsLink,
+    authLink.concat(httpLink),
+  )
 
-// using the ability to split links, you can send data to each link
-// depending on what kind of operation is being sent
-const link = split(
-  // split based on operation type
-  ({ query }) => {
-    const definition = getMainDefinition(query)
-    return (
-      definition.kind === 'OperationDefinition'
-      && definition.operation === 'subscription'
-    )
-  },
-  wsLink,
-  httpLink,
-)
+  const cache = new InMemoryCache()
 
-// Cache implementation
-const cache = new InMemoryCache()
-
-// Create the apollo client
-export const apolloClient = new ApolloClient({
-  link,
-  cache,
-})
+  return new ApolloClient({
+    link,
+    cache,
+  })
+}

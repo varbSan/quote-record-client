@@ -3,11 +3,13 @@ import VwUserAgreement from '@/pages/PgAbout/views/VwUserAgreement.vue'
 import VwUserPrivacyNotice from '@/pages/PgAbout/views/VwUserPrivacyNotice.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
 import PgSignin from '@/pages/PgSignin/PgSignin.vue'
+import { authGuard } from './guards/authGuard'
 
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
+    beforeEnter: authGuard,
     component: PgHome,
     meta: { label: 'Dashboard', icon: 'i-lucide-home' },
   },
@@ -18,6 +20,7 @@ export const routes: RouteRecordRaw[] = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
+    beforeEnter: authGuard,
     component: () => import('../pages/PgAbout/PgAbout.vue'),
     meta: { label: 'About', icon: 'i-lucide-info' },
     children: [

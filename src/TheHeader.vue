@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
-import { dark, neobrutalism } from '@clerk/themes'
+import { dark } from '@clerk/themes'
 import { useAuth, UserButton } from '@clerk/vue'
 import { useColorMode } from '@vueuse/core'
 import { computed } from 'vue'
@@ -14,6 +14,7 @@ const { currentRoute } = useRouter()
 const route = useRoute()
 const matched = computed(() => route.matched)
 
+const authTheme = computed(() => ({ baseTheme: colorMode.value === 'dark' ? dark : undefined }))
 const breadcrumbsItems = computed(
   () => matched.value?.map(route => formatRoute(
     route,
@@ -48,7 +49,7 @@ function formatRoute(
       <UAvatar src="/raccoon_icon.png" />
     </UButton>
 
-    <UBreadcrumb :items="breadcrumbsItems">
+    <UBreadcrumb :items="breadcrumbsItems" class="mr-auto">
       <template #dropdown="{ item }">
         <UDropdownMenu v-if="item.children" :items="item.children" class="cursor-pointer">
           <UButton
@@ -78,6 +79,12 @@ function formatRoute(
       class="cursor-pointer ml-auto"
       @click="colorMode = colorMode === 'dark' ? 'light' : 'dark'"
     />
-    <UserButton v-if="isSignedIn" :appearance="{ baseTheme: colorMode === 'dark' ? dark : neobrutalism }" />
+    <UserButton
+      v-if="isSignedIn"
+      :appearance="authTheme"
+      :user-profile-props="{
+        appearance: authTheme,
+      }"
+    />
   </header>
 </template>

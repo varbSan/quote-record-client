@@ -10,12 +10,11 @@ const app = createApp({
   render: () => h(App),
 })
 
-app.use(clerkPlugin, { publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY })
-app.use(router)
 app.use(ui)
-
-registerApollo(app);
+app.use(router)
+app.use(clerkPlugin, { publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY });
 
 (async () => {
+  await registerApollo(app)
   app.mount('#app')
 })()

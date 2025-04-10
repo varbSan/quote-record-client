@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
-import { apolloClient } from './client'
+import { createApolloClient } from './client'
 
 export async function registerApollo(app: App) {
-  app.provide(DefaultApolloClient, apolloClient)
+  app.provide(DefaultApolloClient, await createApolloClient())
 }
