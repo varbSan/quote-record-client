@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
-import { dark } from '@clerk/themes'
-import { useAuth, UserButton } from '@clerk/vue'
-import { useColorMode } from '@vueuse/core'
+import { UserButton, useSession } from '@clerk/vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useTheme } from './composables/useTheme'
 import { getRouteSiblings } from './utils/getRouteSiblings'
 
-const { isSignedIn } = useAuth()
-const colorMode = useColorMode()
+const { isSignedIn } = useSession()
 const { currentRoute } = useRouter()
 const route = useRoute()
+const { authBaseTheme, colorMode } = useTheme()
+
 const matched = computed(() => route.matched)
 
-const authTheme = computed(() => ({ baseTheme: colorMode.value === 'dark' ? dark : undefined }))
 const breadcrumbsItems = computed(
   () => matched.value?.map(route => formatRoute(
     route,
@@ -81,9 +80,9 @@ function formatRoute(
     />
     <UserButton
       v-if="isSignedIn"
-      :appearance="authTheme"
+      :appearance="authBaseTheme"
       :user-profile-props="{
-        appearance: authTheme,
+        appearance: authBaseTheme,
       }"
     />
   </header>

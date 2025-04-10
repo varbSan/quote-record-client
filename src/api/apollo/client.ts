@@ -3,10 +3,10 @@ import { setContext } from '@apollo/client/link/context'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
-import { auth, initAuth } from '../auth'
+import { auth } from '../auth'
 
 export async function createApolloClient() {
-  await initAuth()
+  await auth.load()
 
   const httpLink = createHttpLink({
     uri: import.meta.env.VITE_API_URL,

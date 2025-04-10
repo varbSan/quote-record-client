@@ -3,20 +3,20 @@ import { useAuth } from '@clerk/vue'
 import { useQuery } from '@vue/apollo-composable'
 import { computed, watch } from 'vue'
 
+
 export function useCurrentUser() {
-  const { userId, isSignedIn, isLoaded: isAuthLoaded } = useAuth()
+  const { userId, isSignedIn, isLoaded } = useAuth()
   const { result, refetch } = useQuery(GET_CURRENT_USER_QUERY)
 
   const currentUser = computed(() => userId.value && isSignedIn.value ? result.value?.getCurrentUser : undefined)
 
-  watch([userId, isAuthLoaded, isSignedIn], () => {
-    if (isAuthLoaded) {
+  watch([userId, isLoaded, isSignedIn], () => {
+    if (isLoaded.value) {
       refetch()
     }
   }, { immediate: true })
 
   return {
     currentUser,
-    isAuthLoaded,
   }
 }

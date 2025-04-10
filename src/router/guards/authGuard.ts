@@ -1,18 +1,15 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { auth } from '@/api/auth'
+import { store } from '@/utils/store'
 
 export function authGuard(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
-  if (auth.isSignedIn) {
+  if (store.getIsSignedIn() === 'true') {
     next(true)
   }
-  else if (to.name === 'signin') {
-    next({ name: 'signin' })
-  }
   else {
-    next(false)
+    next({ name: 'signin' })
   }
 }

@@ -17,10 +17,10 @@ export const routes: RouteRecordRaw[] = [
     path: '/about',
     name: 'about',
     redirect: '/about/user-agreement',
+    beforeEnter: authGuard,
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    beforeEnter: authGuard,
     component: () => import('../pages/PgAbout/PgAbout.vue'),
     meta: { label: 'About', icon: 'i-lucide-info' },
     children: [
@@ -42,6 +42,6 @@ export const routes: RouteRecordRaw[] = [
     path: '/signin',
     name: 'signin',
     component: PgSignin,
-    meta: { label: 'Signin', icon: 'i-lucide-circle-user-round', isPublic: true },
+    meta: { label: 'Signin', icon: 'i-lucide-circle-user-round' },
   },
 ]
