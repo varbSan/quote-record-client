@@ -14,13 +14,13 @@ const { authBaseTheme, colorMode } = useTheme()
 
 const matchedRoutes = computed(() => route.matched)
 
-const breadcrumbsItems = computed(
+const breadcrumbsItems = computed( // return current route and its siblings formatted (filter out signin route)
   () => matchedRoutes.value
-    ?.filter(route => route.name !== 'signin')
     ?.map(route => formatRoute(
       route,
-      getRouteSiblings(route.name as string, matchedRoutes.value),
-    )),
+      getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
+    )
+  ),
 )
 
 function formatRoute(
