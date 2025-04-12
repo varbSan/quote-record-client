@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { BreadcrumbItem } from '@nuxt/ui'
+import type { BreadcrumbItem, CommandPaletteGroup, CommandPaletteItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
 import { UserButton, useSession } from '@clerk/vue'
-import { computed } from 'vue'
+import { defineShortcuts } from '@nuxt/ui/runtime/composables/defineShortcuts.js'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import MlNavigationDropdown from './components/molecules/MlNavigationDropdown.vue'
 import { useTheme } from './composables/useTheme'
+import { routes } from './router/routes'
 import { getRouteSiblings } from './utils/getRouteSiblings'
 
 const { isSignedIn } = useSession()
@@ -15,18 +17,32 @@ const { authBaseTheme, colorMode } = useTheme()
 const matchedRoutes = computed(() => route.matched)
 
 const breadcrumbsItems = computed( // return current route and its siblings formatted (filter out signin route)
-  () => matchedRoutes.value
-    ?.map(route => formatRoute(
-      route,
-      getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
-    ),
-    ),
+  () => matchedRoutes.value?.map(route => formatRoute(
+    route,
+    getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
+  )),
 )
+
+const isSearchModalOpen = ref(false)
+const searchTerm = ref('')
+const searchItems = computed(() => [{
+  id: 'routes',
+  label: searchTerm.value ? `Routes matching “${searchTerm.value}”...` : 'Routes',
+  items: routes
+    .filter(route => route.name !== 'signin' && isSignedIn.value)
+    .map(route => formatRoute(route, route.children)),
+}])
+
+defineShortcuts({
+  meta_k: () => {
+    isSearchModalOpen.value = !isSearchModalOpen.value
+  },
+})
 
 function formatRoute(
   route: RouteRecordRaw | RouteLocationNormalizedLoadedGeneric | RouteLocationMatched,
   siblings: RouteRecordRaw[] = [],
-): BreadcrumbItem {
+): CommandPaletteItem | BreadcrumbItem {
   const children = siblings.map(sibling => formatRoute(sibling))
   return {
     slot: 'dropdown' as const,
@@ -58,8 +74,27 @@ function formatRoute(
         <span class="mx-2 text-(--ui-text-muted)">/</span>
       </template>
     </UBreadcrumb>
+    <UModal v-model:open="isSearchModalOpen" class="ml-auto">
+      <UButton
+        color="neutral"
+        variant="outline"
+        size="xs"
+        icon="i-lucide-search"
+        @click="isSearchModalOpen = true"
+      />
+
+      <template #content>
+        <UCommandPalette
+          v-model:search-term="searchTerm"
+          :groups="searchItems"
+          placeholder="Search users..."
+          class="h-80"
+          @keyup.enter="isSearchModalOpen = false"
+        />
+      </template>
+    </UModal>
     <UButton
-      :icon="colorMode === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+      :icon="colorMode === 'dark' ? 'i-lucide-moon' : 'i-lucide-sun'"
       color="neutral"
       size="xs"
       variant="outline"

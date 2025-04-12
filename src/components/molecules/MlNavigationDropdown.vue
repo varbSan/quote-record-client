@@ -30,7 +30,7 @@ const { currentRoute } = useRouter()
           as="button"
           :icon="child.icon"
           :to="child.to"
-          class="py-1 px-2 border-b-[0.5px] last:border-b-0 text-xs"
+          class="py-2 px-4 border-b-[0.5px] last:border-b-0 text-xs"
         >
           <span
             :class="{
