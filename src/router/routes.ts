@@ -21,7 +21,7 @@ export const routes: RouteRecordRaw[] = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import('../pages/PgAbout/PgAbout.vue'),
+    component: () => import('@/pages/PgAbout/PgAbout.vue'),
     meta: { label: 'About', icon: 'i-lucide-info' },
     children: [
       {

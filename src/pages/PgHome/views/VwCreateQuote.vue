@@ -45,7 +45,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UFormField>
 
     <div class="flex justify-end mt-auto">
-      <UButton :loading="createQuoteRecordLoading" type="submit">
+      <UButton :loading="createQuoteRecordLoading" type="submit" size="sm">
         Create quote
       </UButton>
     </div>

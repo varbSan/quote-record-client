@@ -19,7 +19,7 @@ const breadcrumbsItems = computed( // return current route and its siblings form
     ?.map(route => formatRoute(
       route,
       getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
-    )
+    ),
   ),
 )
 
@@ -58,13 +58,12 @@ function formatRoute(
         <span class="mx-2 text-(--ui-text-muted)">/</span>
       </template>
     </UBreadcrumb>
-
     <UButton
       :icon="colorMode === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
       color="neutral"
-      size="sm"
+      size="xs"
       variant="outline"
-      class="cursor-pointer ml-auto"
+      class="cursor-pointer"
       @click="colorMode = colorMode === 'dark' ? 'light' : 'dark'"
     />
     <UserButton

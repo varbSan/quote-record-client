@@ -62,7 +62,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
     </UFormField>
 
     <div class="flex justify-end mt-auto">
-      <UButton type="submit" :loading="fileUploading">
+      <UButton type="submit" :loading="fileUploading" size="sm">
         Upload file
       </UButton>
     </div>
