@@ -20,7 +20,7 @@ const breadcrumbsItems = computed( // return current route and its siblings form
       route,
       getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
     ),
-  ),
+    ),
 )
 
 function formatRoute(

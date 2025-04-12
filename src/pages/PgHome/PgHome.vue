@@ -22,10 +22,21 @@ const activeView = ref('VwCreateQuote')
 
 <template>
   <main>
-    <section class="grid grid-cols-12 place-items-center mx-6 mt-20">
-      <div class="hidden md:block col-span-3" />
-
-      <div class="space-y-4 border-2 p-4 rounded-lg md:col-span-6 w-full col-span-12">
+    <section class="flex flex-col mx-6 justify-center mb-6">
+      <div class="max-w-[35rem] w-full mx-auto flex justify-end">
+        <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
+      </div>
+      <VwCreateQuote
+        v-if="activeView === 'VwCreateQuote'"
+        class="space-y-4 outline-[0.5px] p-4 rounded-lg max-w-[35rem] w-full mx-auto"
+      />
+      <VwFileUpload
+        v-else
+        class="space-y-4 outline-[0.5px] p-4 rounded-lg max-w-[35rem] w-full mx-auto"
+      />
+    </section>
+    <section class="flex flex-col mx-6 justify-center">
+      <div class="space-y-4 outline-[0.5px] p-4 rounded-lg max-w-[35rem] w-full mx-auto">
         <p>
           {{ subscriptionText ?? randomTextQuote }}
         </p>
@@ -35,18 +46,6 @@ const activeView = ref('VwCreateQuote')
           </UButton>
         </div>
       </div>
-      <div class="hidden md:block col-span-3" />
-    </section>
-    <section class="grid grid-cols-12 place-items-center mx-6 mt-20">
-      <div class="hidden md:block col-span-3" />
-      <div class="md:col-span-6 justify-between ml-auto">
-        <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
-      </div>
-      <div class="hidden md:block col-span-3" />
-      <div class="hidden md:block col-span-3" />
-      <VwCreateQuote v-if="activeView === 'VwCreateQuote'" class="space-y-4 border-2 p-4 rounded-lg md:col-span-6 w-full col-span-12" />
-      <VwFileUpload v-else class="space-y-4 border-2 p-4 rounded-lg md:col-span-6 w-full col-span-12" />
-      <div class="hidden md:block col-span-3" />
     </section>
   </main>
 </template>
