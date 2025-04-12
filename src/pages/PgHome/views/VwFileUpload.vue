@@ -58,7 +58,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
 <template>
   <UForm :schema="schema" :state="state" class="flex flex-col" @submit="onSubmitFile">
     <UFormField label="File" name="file">
-      <UInput type="file" @change="handleFileChange" />
+      <UInput type="file" variant="soft" @change="handleFileChange" />
     </UFormField>
 
     <div class="flex justify-end mt-auto">

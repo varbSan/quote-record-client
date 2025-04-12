@@ -47,7 +47,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <UForm :schema="schema" :state="state" class="flex flex-col" @submit="onSubmit">
     <UFormField label="Text" name="quoteRecordText">
-      <UInput v-model="state.text" type="text" />
+      <UTextarea v-model="state.text" type="text" class="w-full" variant="soft" />
     </UFormField>
     <UFormField label="Make quote private" name="quoteRecordIsPrivate" class="flex self-end text-xs items-end">
       <UCheckbox v-model="state.isPrivate" value="" class="ml-2" />
