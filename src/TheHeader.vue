@@ -3,22 +3,24 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
 import { UserButton, useSession } from '@clerk/vue'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import MlNavigationDropdown from './components/molecules/MlNavigationDropdown.vue'
 import { useTheme } from './composables/useTheme'
 import { getRouteSiblings } from './utils/getRouteSiblings'
 
 const { isSignedIn } = useSession()
-const { currentRoute } = useRouter()
 const route = useRoute()
 const { authBaseTheme, colorMode } = useTheme()
 
-const matched = computed(() => route.matched)
+const matchedRoutes = computed(() => route.matched)
 
 const breadcrumbsItems = computed(
-  () => matched.value?.map(route => formatRoute(
-    route,
-    getRouteSiblings(route.name as string, matched.value),
-  )),
+  () => matchedRoutes.value
+    ?.filter(route => route.name !== 'signin')
+    ?.map(route => formatRoute(
+      route,
+      getRouteSiblings(route.name as string, matchedRoutes.value),
+    )),
 )
 
 function formatRoute(
@@ -50,20 +52,7 @@ function formatRoute(
 
     <UBreadcrumb :items="breadcrumbsItems" class="mr-auto">
       <template #dropdown="{ item }">
-        <UDropdownMenu v-if="item.children" :items="item.children" class="cursor-pointer">
-          <UButton
-            :icon="item.icon"
-            :label="item.label"
-            :color="currentRoute?.name === item.value ? 'primary' : 'neutral'"
-            variant="link"
-            class="p-0.5"
-          />
-        </UDropdownMenu>
-        <UButton
-          v-else
-          :icon="item.icon"
-          :label="item.label" color="neutral" variant="link" class="p-0.5" :to="item.to"
-        />
+        <MlNavigationDropdown :item="item" />
       </template>
       <template #separator>
         <span class="mx-2 text-(--ui-text-muted)">/</span>

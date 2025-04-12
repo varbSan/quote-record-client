@@ -3,7 +3,6 @@ import { useAuth } from '@clerk/vue'
 import { useQuery } from '@vue/apollo-composable'
 import { computed, watch } from 'vue'
 
-
 export function useCurrentUser() {
   const { userId, isSignedIn, isLoaded } = useAuth()
   const { result, refetch } = useQuery(GET_CURRENT_USER_QUERY)

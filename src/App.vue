@@ -13,7 +13,6 @@ watch(isSignedIn, () => {
     return
   store.setIsSignedIn((!!isSignedIn.value).toString() as StoreIsSignedIn)
 })
-
 </script>
 
 <template>
