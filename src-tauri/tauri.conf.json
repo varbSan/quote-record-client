@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "diamonds-client",
+  "productName": "quote-record-client",
   "version": "0.1.0",
-  "identifier": "com.bakary.diamonds",
+  "identifier": "com.bakary.quote-record",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Diamonds",
+        "title": "Quote Record",
         "width": 800,
         "height": 600,
         "resizable": true,

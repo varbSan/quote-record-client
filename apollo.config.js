@@ -2,7 +2,7 @@
 export default {
   client: {
     service: {
-      name: 'diamonds-client',
+      name: 'quote-record-client',
       // URL to the GraphQL API
       url: 'http://localhost:3000/graphql',
     },
