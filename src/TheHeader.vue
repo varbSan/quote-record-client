@@ -65,7 +65,7 @@ function formatRoute(
     >
       <UAvatar src="/raccoon_icon.png" />
     </UButton>
-
+    Name change test
     <UBreadcrumb :items="breadcrumbsItems" class="mr-auto">
       <template #dropdown="{ item }">
         <MlNavigationDropdown :item="item" />
