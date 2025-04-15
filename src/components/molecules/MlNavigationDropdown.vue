@@ -1,14 +1,17 @@
 <script setup lang="ts" generic="T">
 import type { BreadcrumbItem } from '@nuxt/ui'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps<{ item: BreadcrumbItem }>()
 
 const { currentRoute } = useRouter()
+
+const isOpen = ref(false)
 </script>
 
 <template>
-  <UPopover v-if="props.item.children" mode="hover">
+  <UPopover v-if="props.item.children" v-model:open="isOpen">
     <ULink
       as="button"
       :icon="props.item.icon"
@@ -31,6 +34,7 @@ const { currentRoute } = useRouter()
           :icon="child.icon"
           :to="child.to"
           class="py-2 px-4 border-b-[0.5px] last:border-b-0 text-xs"
+          @click="isOpen = false"
         >
           <span
             :class="{
