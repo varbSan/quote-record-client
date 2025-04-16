@@ -4,7 +4,7 @@ import { QUOTE_RECORD_CREATED_SUBSCRIPTION } from '@/api/apollo/subscriptions/qu
 import { useQuery, useSubscription } from '@vue/apollo-composable'
 import { computed, ref } from 'vue'
 import VwCreateQuote from './views/VwCreateQuote.vue'
-import VwFileUpload from './views/VwFileUpload.vue'
+import VwUploadQuotes from './views/VwUploadQuotes.vue'
 
 const { result: resultSubscription } = useSubscription(QUOTE_RECORD_CREATED_SUBSCRIPTION)
 const { result: resultQuery, refetch: refetchQuery, loading } = useQuery(GET_RANDOM_QUOTE_RECORD_QUERY)
@@ -14,7 +14,7 @@ const randomTextQuote = computed(() => resultQuery.value?.getRandomQuoteRecord.t
 
 const viewItems = [
   { value: 'VwCreateQuote', icon: 'i-lucide-pen' },
-  { value: 'VwFileUpload', icon: 'i-lucide-upload' },
+  { value: 'VwUploadQuotes', icon: 'i-lucide-upload' },
 ]
 
 const activeView = ref('VwCreateQuote')
@@ -30,7 +30,7 @@ const activeView = ref('VwCreateQuote')
         v-if="activeView === 'VwCreateQuote'"
         class="space-y-4 outline-[0.5px] p-4 rounded-lg max-w-[35rem] w-full mx-auto"
       />
-      <VwFileUpload
+      <VwUploadQuotes
         v-else
         class="space-y-4 outline-[0.5px] p-4 rounded-lg max-w-[35rem] w-full mx-auto"
       />

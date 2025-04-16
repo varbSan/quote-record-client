@@ -35,7 +35,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
   const formData = new FormData() // Create a new FormData object
   formData.append('file', event.data.file)
 
-  const response = await fetch(import.meta.env.VITE_API_URL_FILE_UPLOAD, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL_UPLOAD}/quotes`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${await getToken.value() ?? ''}`,
