@@ -19,7 +19,7 @@ const matchedRoutes = computed(() => route.matched)
 const breadcrumbsItems = computed( // return current route and its siblings formatted (filter out signin route)
   () => matchedRoutes.value?.map(route => formatRoute(
     route,
-    getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => route.name !== 'signin' && isSignedIn.value),
+    getRouteSiblings(route.name as string, matchedRoutes.value)?.filter(route => !!route.name && route.name !== 'signin' && isSignedIn.value),
   )),
 )
 
@@ -29,7 +29,7 @@ const searchItems = computed(() => [{
   id: 'routes',
   label: searchTerm.value ? `Routes matching “${searchTerm.value}”...` : 'Routes',
   items: routes
-    .filter(route => route.name !== 'signin' && isSignedIn.value)
+    .filter(route => !!route.name && route.name !== 'signin' && isSignedIn.value)
     .map(route => formatRoute(route, route.children)),
 }])
 

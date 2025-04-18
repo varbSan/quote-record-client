@@ -8,6 +8,7 @@ import PgSignin from '@/pages/PgSignin/PgSignin.vue'
 import { authGuard } from './guards/authGuard'
 
 export const routes: RouteRecordRaw[] = [
+  { path: '/', redirect: '/home' },
   {
     path: '/home',
     name: 'home',
