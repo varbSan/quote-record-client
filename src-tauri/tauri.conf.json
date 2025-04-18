@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "quote-record-client",
   "version": "0.1.0",
-  "identifier": "com.bakary.quote-record",
+  "identifier": "com.tauri.dev",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",

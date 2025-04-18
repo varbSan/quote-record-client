@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
-import VwTermsOfService from '@/pages/PgAbout/views/VwTermsOfService.vue'
 import VwPrivacyPolicy from '@/pages/PgAbout/views/VwPrivacyPolicy.vue'
+import VwTermsOfService from '@/pages/PgAbout/views/VwTermsOfService.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
 import VwCreateQuote from '@/pages/PgHome/views/VwCreateQuote.vue'
 import VwUploadQuotes from '@/pages/PgHome/views/VwUploadQuotes.vue'
