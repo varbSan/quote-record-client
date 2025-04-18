@@ -2,16 +2,33 @@ import type { RouteRecordRaw } from 'vue-router'
 import VwUserAgreement from '@/pages/PgAbout/views/VwUserAgreement.vue'
 import VwUserPrivacyNotice from '@/pages/PgAbout/views/VwUserPrivacyNotice.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
+import VwCreateQuote from '@/pages/PgHome/views/VwCreateQuote.vue'
+import VwUploadQuotes from '@/pages/PgHome/views/VwUploadQuotes.vue'
 import PgSignin from '@/pages/PgSignin/PgSignin.vue'
 import { authGuard } from './guards/authGuard'
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
+    redirect: '/home/create-quote',
     beforeEnter: authGuard,
     component: PgHome,
     meta: { label: 'Dashboard', icon: 'i-lucide-home' },
+    children: [
+      {
+        name: 'createQuote',
+        path: 'create-quote',
+        component: VwCreateQuote,
+        meta: { label: 'Create Quote', icon: 'i-lucide-square-pen' },
+      },
+      {
+        name: 'uploadQuotes',
+        path: 'upload-quotes',
+        component: VwUploadQuotes,
+        meta: { label: 'Upload Quotes', icon: 'i-lucide-upload' },
+      },
+    ],
   },
   {
     path: '/about',

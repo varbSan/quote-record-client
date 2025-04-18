@@ -45,7 +45,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="flex flex-col" @submit="onSubmit">
+  <UForm :schema="schema" :state="state" class="flex flex-col gap-2" @submit="onSubmit">
     <UFormField label="Text" name="quoteRecordText">
       <UTextarea v-model="state.text" type="text" class="w-full text-base" variant="soft" />
     </UFormField>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BreadcrumbItem, CommandPaletteGroup, CommandPaletteItem } from '@nuxt/ui'
+import type { BreadcrumbItem, CommandPaletteItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
 import { UserButton, useSession } from '@clerk/vue'
 import { defineShortcuts } from '@nuxt/ui/runtime/composables/defineShortcuts.js'

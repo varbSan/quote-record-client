@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
-import router from '@/router'
 import { routes } from '@/router/routes'
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { currentRoute } = useRouter()
+const { currentRoute, push } = useRouter()
 const activeView = ref(currentRoute.value.name)
 watch(activeView, () => {
   if (activeView.value !== currentRoute.value.name) {
-    router.push({ name: activeView.value as string })
+    push({ name: activeView.value as string })
   }
 })
 
@@ -29,8 +28,8 @@ const viewItems = ref<TabsItem[]>(
 </script>
 
 <template>
-  <main>
-    <div class="flex justify-center">
+  <main class="flex flex-col max-w-[35rem] w-full mx-auto">
+    <div class="flex justify-end">
       <UTabs v-model="activeView" :items="viewItems" size="xs" />
     </div>
     <RouterView />
