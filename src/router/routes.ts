@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
-import VwUserAgreement from '@/pages/PgAbout/views/VwUserAgreement.vue'
-import VwUserPrivacyNotice from '@/pages/PgAbout/views/VwUserPrivacyNotice.vue'
+import VwTermsOfService from '@/pages/PgAbout/views/VwTermsOfService.vue'
+import VwPrivacyPolicy from '@/pages/PgAbout/views/VwPrivacyPolicy.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
 import VwCreateQuote from '@/pages/PgHome/views/VwCreateQuote.vue'
 import VwUploadQuotes from '@/pages/PgHome/views/VwUploadQuotes.vue'
@@ -45,14 +45,14 @@ export const routes: RouteRecordRaw[] = [
       {
         name: 'userAgreement',
         path: 'user-agreement',
-        component: VwUserAgreement,
-        meta: { label: 'User Agreement', icon: 'i-lucide-file-check' },
+        component: VwTermsOfService,
+        meta: { label: 'Terms of Service', icon: 'i-lucide-file-check' },
       },
       {
         name: 'userPrivacyNotice',
         path: 'user-privacy-notice',
-        component: VwUserPrivacyNotice,
-        meta: { label: 'User Privacy Notice', icon: 'i-lucide-book-open-text' },
+        component: VwPrivacyPolicy,
+        meta: { label: 'Privacy Policy', icon: 'i-lucide-book-open-text' },
       },
     ],
   },
