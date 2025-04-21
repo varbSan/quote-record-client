@@ -18,8 +18,8 @@ watch(isSignedIn, () => {
 <template>
   <UApp>
     <div v-if="isLoaded" class="flex flex-col h-[100dvh]">
-      <TheHeader />
-      <RouterView />
+      <TheHeader class="p-4" />
+      <RouterView class="px-4" />
       <TheFooter class="mt-auto" />
     </div>
   </UApp>
