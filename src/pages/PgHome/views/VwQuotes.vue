@@ -21,7 +21,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
   {
     accessorKey: 'quote',
     header: 'Quote',
-    cell: ({ row }) => h('p', { class: 'text-pretty cursor-default', title: row.original.text }, row.original.text)
+    cell: ({ row }) => h('p', { class: 'text-wrap cursor-default', title: row.original.text }, row.original.text)
   },
   {
 
