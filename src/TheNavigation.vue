@@ -26,7 +26,7 @@ const breadcrumbsItems = computed( // return current route and its siblings form
 )
 
 const navbar = useTemplateRef<HTMLElement>('navbar')
-onClickOutside(navbar, event => isNavBarOpen.value = false)
+onClickOutside(navbar, () => isNavBarOpen.value = false)
 
 watch(currentRoute, () => {
   isNavBarOpen.value = false
@@ -94,7 +94,13 @@ function formatNavBarRouteItem(
 <template>
   <div class="flex gap-x-2 items-center">
     <UDrawer direction="left" :open="isNavBarOpen">
-      <UButton color="neutral" variant="outline" icon="i-lucide-menu" @click="isNavBarOpen = true" />
+      <UButton
+        class="cursor-pointer"
+        color="neutral"
+        variant="outline"
+        icon="i-lucide-menu"
+        @click="isNavBarOpen = true"
+      />
 
       <template #content>
         <div ref="navbar">
