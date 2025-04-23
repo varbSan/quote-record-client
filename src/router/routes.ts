@@ -3,6 +3,7 @@ import VwPrivacyPolicy from '@/pages/PgAbout/views/VwPrivacyPolicy.vue'
 import VwTermsOfService from '@/pages/PgAbout/views/VwTermsOfService.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
 import VwCreateQuote from '@/pages/PgHome/views/VwCreateQuote.vue'
+import VwQuote from '@/pages/PgHome/views/VwQuote.vue'
 import VwQuotes from '@/pages/PgHome/views/VwQuotes.vue'
 import VwUploadQuotes from '@/pages/PgHome/views/VwUploadQuotes.vue'
 import PgSignin from '@/pages/PgSignin/PgSignin.vue'
@@ -13,11 +14,17 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     name: 'home',
-    redirect: '/home/create-quote',
+    redirect: '/home/quote',
     beforeEnter: authGuard,
     component: PgHome,
     meta: { label: 'Dashboard', icon: 'i-lucide-home' },
     children: [
+      {
+        name: 'quote',
+        path: 'quote',
+        component: VwQuote,
+        meta: { label: 'Quote', icon: 'i-lucide-sun' },
+      },
       {
         name: 'quotes',
         path: 'quotes',

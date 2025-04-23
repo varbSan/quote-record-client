@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { CommandPaletteItem } from '@nuxt/ui'
-import { useRouter, type RouteLocationMatched, type RouteLocationNormalizedLoadedGeneric, type RouteRecordRaw } from 'vue-router'
+import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
 import type { GetQuotesQuery } from './gql/graphql'
 import { useSession } from '@clerk/vue'
 import { defineShortcuts } from '@nuxt/ui/runtime/composables/defineShortcuts.js'
 import { useLazyQuery } from '@vue/apollo-composable'
 import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { GET_QUOTES_QUERY } from './api/apollo/queries/getQuotes.query'
 import { routes } from './router/routes'
 
@@ -68,16 +69,15 @@ function formatQuoteItem(quote: GetQuotesQuery['getQuotes'][number]): CommandPal
     slot: 'dropdown' as const,
     label: quote.text,
     value: quote.id,
-    onSelect: (event) => {
-      push({ 
-        name: 'quotes', 
-        query: { searchTerm: event?.target?.nodeName === 'BUTTON' ? searchTerm.value : quote.text } 
+    onSelect: (event: Event) => {
+      push({
+        name: 'quotes',
+        query: { searchTerm: event?.target?.nodeName === 'BUTTON' ? searchTerm.value : quote.text },
       })
-      isSearchModalOpen.value = false 
+      isSearchModalOpen.value = false
     },
   }
 }
-
 </script>
 
 <template>
