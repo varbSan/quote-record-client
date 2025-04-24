@@ -31,27 +31,46 @@ function handleFileChange(event: Event) {
 }
 
 async function onSubmitFile(event: FormSubmitEvent<Schema>) {
+  const file = event.data.file
+  if (!file)
+    return
+
   fileUploading.value = true
-  const formData = new FormData() // Create a new FormData object
-  formData.append('file', event.data.file)
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL_UPLOAD}/quotes`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${await getToken.value() ?? ''}`,
-    },
-    body: formData, // Pass the FormData as the body
-  })
-  const json = await response.json()
+  try {
+    const filename = file.name
+    const contentType = file.type || 'application/octet-stream'
 
-  if (response.ok) {
-    toast.add({ title: 'Success', description: json.message, color: 'success' })
+    const res = await fetch(`${import.meta.env.VITE_API_URL_UPLOAD}/url?filename=${encodeURIComponent(filename)}&type=${encodeURIComponent(contentType)}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${await getToken.value() ?? ''}`,
+      },
+    })
+    const { url } = await res.json()
+
+    const uploadRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+      },
+      body: file,
+    })
+
+    if (!uploadRes.ok) {
+      toast.add({ title: 'Error', description: 'Upload failed', color: 'error' })
+    }
+    else {
+      toast.add({ title: 'Success', description: 'File successfully uploaded', color: 'success' })
+    }
   }
-  else {
-    toast.add({ title: 'Error', description: json.message, color: 'error' })
+  catch (err) {
+    console.error(err)
+    toast.add({ title: 'Success', description: 'Something went wrong', color: 'error' })
   }
-
-  fileUploading.value = false
+  finally {
+    fileUploading.value = false
+  }
 }
 </script>
 
