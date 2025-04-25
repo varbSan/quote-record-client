@@ -10,8 +10,8 @@ const { authBaseTheme, colorMode } = useTheme()
 
 <template>
   <header class="flex gap-x-2 items-center justify-start">
-    <TheNavigation />
-    <TheSearch class="ml-auto" />
+    <TheNavigation v-if="isSignedIn" />
+    <TheSearch v-if="isSignedIn" class="ml-auto" />
     <UButton
       :icon="colorMode === 'dark' ? 'i-lucide-moon' : 'i-lucide-sun'"
       color="neutral"
