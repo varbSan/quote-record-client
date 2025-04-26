@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { GET_RANDOM_QUOTE_RECORD_QUERY } from '@/api/apollo/queries/getRandomQuoteRecord.query'
-import { QUOTE_RECORD_CREATED_SUBSCRIPTION } from '@/api/apollo/subscriptions/quoteRecordCreated.subscription'
+import { GET_RANDOM_QUOTE_QUERY } from '@/api/apollo/queries/getRandomQuote.query'
+import { QUOTE_CREATED_SUBSCRIPTION } from '@/api/apollo/subscriptions/quoteCreated.subscription'
 import { useQuery, useSubscription } from '@vue/apollo-composable'
 import { computed, ref, watch } from 'vue'
 
-const { result: resultSubscription } = useSubscription(QUOTE_RECORD_CREATED_SUBSCRIPTION)
-const { result: resultQuery, refetch: refetchQuery, loading } = useQuery(GET_RANDOM_QUOTE_RECORD_QUERY)
+const { result: resultSubscription } = useSubscription(QUOTE_CREATED_SUBSCRIPTION)
+const { result: resultQuery, refetch: refetchQuery, loading } = useQuery(GET_RANDOM_QUOTE_QUERY)
 
-const subscriptionText = computed(() => resultSubscription.value?.quoteRecordCreated.text ?? '')
-const randomTextQuote = computed(() => resultQuery.value?.getRandomQuoteRecord.text ?? '')
+const subscriptionText = computed(() => resultSubscription.value?.quoteCreated.text ?? '')
+const randomTextQuote = computed(() => resultQuery.value?.getRandomQuote.text ?? '')
 
 const quoteDisplayed = ref('')
 watch(randomTextQuote, () => {

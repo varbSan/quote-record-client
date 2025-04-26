@@ -26,7 +26,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "CreateQuoteRecordInput",
+        "name": "CreateQuoteInput",
         "description": null,
         "isOneOf": false,
         "fields": null,
@@ -185,18 +185,18 @@
         "isOneOf": null,
         "fields": [
           {
-            "name": "createQuoteRecord",
+            "name": "createQuote",
             "description": null,
             "args": [
               {
-                "name": "createQuoteRecordInput",
+                "name": "createQuoteInput",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "CreateQuoteRecordInput",
+                    "name": "CreateQuoteInput",
                     "ofType": null
                   }
                 },
@@ -210,7 +210,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
@@ -309,7 +309,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
@@ -345,7 +345,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getLastQuoteRecord",
+            "name": "getLastQuote",
             "description": null,
             "args": [],
             "type": {
@@ -353,7 +353,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
@@ -361,7 +361,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getQuoteRecordByText",
+            "name": "getQuoteByText",
             "description": null,
             "args": [
               {
@@ -386,7 +386,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
@@ -394,7 +394,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getQuoteRecordTotalCount",
+            "name": "getQuoteTotalCount",
             "description": null,
             "args": [],
             "type": {
@@ -437,7 +437,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "QuoteRecordType",
+                    "name": "QuoteType",
                     "ofType": null
                   }
                 }
@@ -447,7 +447,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getRandomQuoteRecord",
+            "name": "getRandomQuote",
             "description": null,
             "args": [],
             "type": {
@@ -455,7 +455,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
@@ -470,7 +470,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "QuoteRecordType",
+        "name": "QuoteType",
         "description": null,
         "isOneOf": null,
         "fields": [
@@ -594,7 +594,7 @@
         "isOneOf": null,
         "fields": [
           {
-            "name": "quoteRecordCreated",
+            "name": "quoteCreated",
             "description": null,
             "args": [],
             "type": {
@@ -602,7 +602,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "QuoteRecordType",
+                "name": "QuoteType",
                 "ofType": null
               }
             },
