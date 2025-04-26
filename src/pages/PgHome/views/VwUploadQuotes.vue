@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { UPLOAD_QUOTES_MUTATION } from '@/api/apollo/mutations/uploadQuotes.mutation'
 import { useAuth } from '@clerk/vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
+import { useMutation } from '@vue/apollo-composable'
 import * as v from 'valibot'
 import { reactive, ref } from 'vue'
+
+const {
+  mutate: uploadQuotes,
+} = useMutation(UPLOAD_QUOTES_MUTATION)
 
 const fileUploading = ref(false)
 const toast = useToast()
@@ -49,7 +55,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
     })
     const { url } = await res.json()
 
-    const uploadRes = await fetch(url, {
+    const uploadResponse = await fetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': contentType,
@@ -57,11 +63,14 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
       body: file,
     })
 
-    if (!uploadRes.ok) {
+    if (!uploadResponse.ok || !res.ok) {
       toast.add({ title: 'Error', description: 'Upload failed', color: 'error' })
     }
-    else {
-      toast.add({ title: 'Success', description: 'File successfully uploaded', color: 'success' })
+
+    const quoteResponse = await uploadQuotes({ filename })
+
+    if (quoteResponse?.data?.uploadQuotes) {
+      toast.add({ title: 'Success', description: quoteResponse.data.uploadQuotes, color: 'success' })
     }
   }
   catch (err) {
