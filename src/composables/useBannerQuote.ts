@@ -1,36 +1,62 @@
+import { UPDATE_QUOTE_MUTATION } from '@/api/apollo/mutations/updateQuote.mutation'
 import { GET_RANDOM_QUOTE_QUERY } from '@/api/apollo/queries/getRandomQuote.query'
 import { QUOTE_CREATED_SUBSCRIPTION } from '@/api/apollo/subscriptions/quoteCreated.subscription'
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
-import { useLazyQuery, useSubscription } from '@vue/apollo-composable'
+import { useLazyQuery, useMutation, useSubscription } from '@vue/apollo-composable'
 import { computed, ref, watch } from 'vue'
 
 export function useBannerQuote() {
+  const {
+    mutate: updateQuote,
+    loading: updateQuoteLoading,
+    error: updateQuoteError,
+  } = useMutation(UPDATE_QUOTE_MUTATION)
+
   const { result: resultSubscription } = useSubscription(QUOTE_CREATED_SUBSCRIPTION)
-  const { load, result: randomQuote, refetch: refetchRandomQuote, loading: randomQuoteLoading } = useLazyQuery(
+  const { load, result: resultQuery, refetch: refetchRandomQuote, loading: randomQuoteLoading } = useLazyQuery(
     GET_RANDOM_QUOTE_QUERY,
     undefined,
     { fetchPolicy: 'network-only' },
   )
 
   const { currentRoute } = useRouter()
-  const bannerQuote = ref('')
+  const toast = useToast()
 
-  const subscriptionText = computed(() => resultSubscription.value?.quoteCreated.text)
-  const randomQuoteText = computed(() => randomQuote.value?.getRandomQuote.text)
+  const subscriptionQuote = computed(() => resultSubscription.value?.quoteCreated)
+  const randomQuote = computed(() => resultQuery.value?.getRandomQuote)
+
+  const bannerQuote = ref<typeof subscriptionQuote.value | typeof randomQuote.value>()
 
   watch([currentRoute], async () => {
     await load()
-    bannerQuote.value = subscriptionText.value ?? randomQuoteText.value ?? ''
+    bannerQuote.value = subscriptionQuote.value ?? randomQuote.value
   }, { immediate: true })
 
-  async function handleRefetchRandomQuote() {
+  async function refetchBannerQuote() {
     await refetchRandomQuote()
-    bannerQuote.value = randomQuoteText.value ?? ''
+    bannerQuote.value = randomQuote.value
+  }
+
+  async function updateBannerQuote(text: string) {
+    try {
+      if (!bannerQuote.value?.id) {
+        throw new Error('Invalid quote id')
+      }
+      const res = await updateQuote({ updateQuoteInput: { id: bannerQuote.value?.id, text } })
+      bannerQuote.value = res?.data?.updateQuote
+      toast.add({ title: 'Success', description: 'Quote updated successfully!', color: 'success' })
+    }
+    catch (err) {
+      toast.add({ title: 'Error', description: updateQuoteError.value?.message ?? err?.toString() ?? '', color: 'error' })
+    }
   }
 
   return {
     bannerQuote,
-    handleRefetchRandomQuote,
+    refetchBannerQuote,
+    updateBannerQuote,
+    updateBannerQuoteLoading: updateQuoteLoading,
     randomQuoteLoading,
   }
 }
