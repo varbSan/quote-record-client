@@ -5,6 +5,7 @@ export const QUOTE_CREATED_SUBSCRIPTION = graphql(`
     quoteCreated {
       id
       text
+      imageUrl
     }
   }
 `)

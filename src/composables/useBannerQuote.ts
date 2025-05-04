@@ -1,35 +1,41 @@
+import { GENERATE_QUOTE_IMAGE_MUTATION } from '@/api/apollo/mutations/generateQuoteImage.mutation'
 import { UPDATE_QUOTE_MUTATION } from '@/api/apollo/mutations/updateQuote.mutation'
 import { GET_RANDOM_QUOTE_QUERY } from '@/api/apollo/queries/getRandomQuote.query'
 import { QUOTE_CREATED_SUBSCRIPTION } from '@/api/apollo/subscriptions/quoteCreated.subscription'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
-import { useLazyQuery, useMutation, useSubscription } from '@vue/apollo-composable'
+import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable'
 import { computed, ref, watch } from 'vue'
 
 export function useBannerQuote() {
+  const { result: subscriptionQuoteResult } = useSubscription(QUOTE_CREATED_SUBSCRIPTION)
+
+  const {
+    result: randomQuoteResult,
+    refetch: refetchRandomQuote,
+    loading: randomQuoteLoading,
+  } = useQuery(GET_RANDOM_QUOTE_QUERY, undefined, { fetchPolicy: 'network-only' })
+
   const {
     mutate: updateQuote,
     loading: updateQuoteLoading,
     error: updateQuoteError,
   } = useMutation(UPDATE_QUOTE_MUTATION)
 
-  const { result: resultSubscription } = useSubscription(QUOTE_CREATED_SUBSCRIPTION)
-  const { load, result: resultQuery, refetch: refetchRandomQuote, loading: randomQuoteLoading } = useLazyQuery(
-    GET_RANDOM_QUOTE_QUERY,
-    undefined,
-    { fetchPolicy: 'network-only' },
-  )
+  const {
+    mutate: generateQuoteImage,
+    loading: generateQuoteImageLoading,
+  } = useMutation(GENERATE_QUOTE_IMAGE_MUTATION)
 
   const { currentRoute } = useRouter()
   const toast = useToast()
 
-  const subscriptionQuote = computed(() => resultSubscription.value?.quoteCreated)
-  const randomQuote = computed(() => resultQuery.value?.getRandomQuote)
+  const subscriptionQuote = computed(() => subscriptionQuoteResult.value?.quoteCreated)
+  const randomQuote = computed(() => randomQuoteResult.value?.getRandomQuote)
 
   const bannerQuote = ref<typeof subscriptionQuote.value | typeof randomQuote.value>()
 
-  watch([currentRoute], async () => {
-    await load()
+  watch([currentRoute, randomQuote], async () => {
     bannerQuote.value = subscriptionQuote.value ?? randomQuote.value
   }, { immediate: true })
 
@@ -58,5 +64,7 @@ export function useBannerQuote() {
     updateBannerQuote,
     updateBannerQuoteLoading: updateQuoteLoading,
     randomQuoteLoading,
+    generateBannerQuoteImage: generateQuoteImage,
+    generateBannerQuoteImageLoading: generateQuoteImageLoading,
   }
 }

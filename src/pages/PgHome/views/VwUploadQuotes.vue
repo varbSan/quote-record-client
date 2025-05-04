@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { GENERATE_PRESIGNED_URL_FILE_UPLOAD_MUTATION } from '@/api/apollo/mutations/generatePresignedUrlFileUpload.mutation'
 import { UPLOAD_QUOTES_MUTATION } from '@/api/apollo/mutations/uploadQuotes.mutation'
-import { useAuth } from '@clerk/vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useMutation } from '@vue/apollo-composable'
 import * as v from 'valibot'
@@ -11,9 +11,12 @@ const {
   mutate: uploadQuotes,
 } = useMutation(UPLOAD_QUOTES_MUTATION)
 
+const {
+  mutate: generatePresignedUrlFileUpload,
+} = useMutation(GENERATE_PRESIGNED_URL_FILE_UPLOAD_MUTATION)
+
 const fileUploading = ref(false)
 const toast = useToast()
-const { getToken } = useAuth()
 
 const schema = v.object({
   file: v.pipe(
@@ -44,18 +47,17 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
   fileUploading.value = true
 
   try {
-    const filename = file.name
+    const fileName = file.name
     const contentType = file.type || 'application/octet-stream'
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL_UPLOAD}/url?filename=${encodeURIComponent(filename)}&type=${encodeURIComponent(contentType)}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${await getToken.value() ?? ''}`,
-      },
+    const res = await generatePresignedUrlFileUpload({
+      fileName,
+      contentType,
     })
-    const { url } = await res.json()
+    const signedUrl = res?.data?.generatePresignedUrlFileUpload ?? ''
 
-    const uploadResponse = await fetch(url, {
+    // upload file to storage bucket
+    await fetch(signedUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': contentType,
@@ -63,11 +65,8 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
       body: file,
     })
 
-    if (!uploadResponse.ok || !res.ok) {
-      toast.add({ title: 'Error', description: 'Upload failed', color: 'error' })
-    }
-
-    const quoteResponse = await uploadQuotes({ filename })
+    // tell backend to fetch file, parse it, and upload each quote in database
+    const quoteResponse = await uploadQuotes({ fileName })
 
     if (quoteResponse?.data?.uploadQuotes) {
       toast.add({ title: 'Success', description: quoteResponse.data.uploadQuotes, color: 'success' })
@@ -90,7 +89,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
     </UFormField>
 
     <div class="flex justify-end mt-auto">
-      <UButton type="submit" :loading="fileUploading" size="sm">
+      <UButton icon="i-lucide-upload" class="cursor-pointer" type="submit" :loading="fileUploading" size="sm">
         Upload file
       </UButton>
     </div>

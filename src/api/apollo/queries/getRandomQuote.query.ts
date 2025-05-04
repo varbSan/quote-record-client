@@ -5,6 +5,7 @@ export const GET_RANDOM_QUOTE_QUERY = graphql(`
     getRandomQuote {
       id
       text
+      imageUrl
     }
   }
 `)

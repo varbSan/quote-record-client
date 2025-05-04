@@ -1,7 +1,7 @@
 import { graphql } from '@/gql'
 
 export const UPLOAD_QUOTES_MUTATION = graphql(`
-  mutation UploadQuote($filename: String!) {
-    uploadQuotes(filename: $filename)
+  mutation UploadQuote($fileName: String!) {
+    uploadQuotes(fileName: $fileName)
   }
 `)
