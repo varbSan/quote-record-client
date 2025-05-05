@@ -32,7 +32,7 @@ watch(activeView, () => {
     <div class="flex justify-end">
       <UTabs v-model="activeView" :items="viewItems" size="xs" />
     </div>
-    <section class="space-y-4 outline-1 md:outline-[0.5px] rounded-lg p-4 mb-2.5">
+    <section class="space-y-4 outline-1 md:outline-[0.5px] outline-white/40 rounded-lg p-4 mb-2.5">
       <RouterView />
     </section>
   </main>

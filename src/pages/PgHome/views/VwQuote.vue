@@ -83,6 +83,8 @@ async function handleGenerateQuoteImage() {
     <p v-else class="p-8">
       {{ bannerQuote?.text }}
     </p>
-    <img :src="bannerQuote?.imageUrl ?? ''" class="rounded">
+    <div v-if="bannerQuote?.imageUrl">
+      <img :src="bannerQuote?.imageUrl ?? ''" class="rounded">
+    </div>
   </div>
 </template>

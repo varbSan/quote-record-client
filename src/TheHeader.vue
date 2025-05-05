@@ -18,6 +18,9 @@ const { authBaseTheme, colorMode } = useTheme()
       size="xs"
       variant="outline"
       class="cursor-pointer"
+      :class="{
+        'ml-auto': !isSignedIn,
+      }"
       @click="colorMode = colorMode === 'dark' ? 'light' : 'dark'"
     />
     <UserButton
