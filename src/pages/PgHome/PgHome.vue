@@ -10,7 +10,7 @@ const viewItems = computed<TabsItem[]>(() =>
   routes
     ?.find(route => route.name === 'home')
     ?.children
-    ?.map(child => ({ value: child.name as string, icon: child.meta?.icon as string }))
+    ?.map(child => ({ value: child.name as string, icon: child.meta?.icon as string, label: child.meta?.label as string }))
     ?? [],
 )
 
@@ -30,7 +30,7 @@ watch(activeView, () => {
 <template>
   <main class="flex flex-col max-w-[35rem] w-full mx-auto">
     <div class="flex justify-end">
-      <UTabs v-model="activeView" :items="viewItems" size="xs" />
+      <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
     </div>
     <section class="space-y-4 outline-1 md:outline-[0.5px] outline-white/40 rounded-lg p-4 mb-2.5">
       <RouterView />

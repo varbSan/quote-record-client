@@ -90,7 +90,7 @@ async function onSubmitFile(event: FormSubmitEvent<Schema>) {
 
     <div class="flex justify-end mt-auto">
       <UButton icon="i-lucide-upload" class="cursor-pointer" type="submit" :loading="fileUploading" size="sm">
-        Upload file
+        Upload
       </UButton>
     </div>
   </UForm>

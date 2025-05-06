@@ -2,7 +2,6 @@ import type { RouteRecordRaw } from 'vue-router'
 import VwPrivacyPolicy from '@/pages/PgAbout/views/VwPrivacyPolicy.vue'
 import VwTermsOfService from '@/pages/PgAbout/views/VwTermsOfService.vue'
 import PgHome from '@/pages/PgHome/PgHome.vue'
-import VwCreateQuote from '@/pages/PgHome/views/VwCreateQuote.vue'
 import VwQuote from '@/pages/PgHome/views/VwQuote.vue'
 import VwQuotes from '@/pages/PgHome/views/VwQuotes.vue'
 import VwUploadQuotes from '@/pages/PgHome/views/VwUploadQuotes.vue'
@@ -23,25 +22,19 @@ export const routes: RouteRecordRaw[] = [
         name: 'quote',
         path: 'quote',
         component: VwQuote,
-        meta: { label: 'Quote', icon: 'i-lucide-sun' },
+        meta: { label: 'Quote', icon: 'i-lucide-pencil-ruler' },
       },
       {
         name: 'quotes',
         path: 'quotes',
         component: VwQuotes,
-        meta: { label: 'Quotes', icon: 'i-lucide-scroll-text' },
-      },
-      {
-        name: 'createQuote',
-        path: 'create-quote',
-        component: VwCreateQuote,
-        meta: { label: 'Create Quote', icon: 'i-lucide-square-pen' },
+        meta: { label: 'Database', icon: 'i-lucide-sheet' },
       },
       {
         name: 'uploadQuotes',
         path: 'upload-quotes',
         component: VwUploadQuotes,
-        meta: { label: 'Upload Quotes', icon: 'i-lucide-upload' },
+        meta: { label: 'Upload', icon: 'i-lucide-upload' },
       },
     ],
   },

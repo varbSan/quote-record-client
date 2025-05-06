@@ -9,7 +9,7 @@ import Textarea from '@nuxt/ui/runtime/components/Textarea.vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
 import { useLazyQuery, useMutation } from '@vue/apollo-composable'
-import { Pen, Trash } from 'lucide-vue-next'
+import { Pencil, Trash } from 'lucide-vue-next'
 import { computed, h, ref, watch } from 'vue'
 
 const { currentRoute } = useRouter()
@@ -110,7 +110,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       return h('div', { class: 'flex items-center justify-end gap-x-1' }, [
-        h(Pen, { class: 'cursor-pointer', size: 14, title: 'edit', onClick: () => editQuote(row.original.id, row.original.text) }),
+        h(Pencil, { class: 'cursor-pointer', size: 14, title: 'edit', onClick: () => editQuote(row.original.id, row.original.text) }),
         h(Trash, { class: 'cursor-pointer', size: 14, title: 'delete', onClick: () => handleDeleteQuote(row.original.id) }),
       ])
     },

@@ -5,6 +5,7 @@ export const CREATE_QUOTE_MUTATION = graphql(`
     createQuote(createQuoteInput: $createQuoteInput) {
       id
       text
+      imageUrl
     }
   }
 `)
