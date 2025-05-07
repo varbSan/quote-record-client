@@ -45,8 +45,8 @@ const navBarItems = computed<NavigationMenuItem[][]>(() => [
   [
     {
       label: 'bakary.dev',
-      icon: 'i-lucide-paw-print',
-      badge: '3.8k',
+      icon: 'i-lucide-at-sign',
+      badge: '',
       to: 'https://bakary.dev/',
       target: '_blank',
     },
