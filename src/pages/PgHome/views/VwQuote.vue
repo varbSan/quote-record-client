@@ -2,11 +2,13 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { CREATE_QUOTE_MUTATION } from '@/api/apollo/mutations/createQuote.mutation'
 import { useBannerQuote } from '@/composables/useBannerQuote'
+import { useRandomQuoteId } from '@/composables/useRandomQuoteId'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useMutation } from '@vue/apollo-composable'
 import { onClickOutside } from '@vueuse/core'
 import * as v from 'valibot'
 import { reactive, ref, useTemplateRef, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const {
   mutate: createQuote,
@@ -16,13 +18,14 @@ const {
 
 const {
   bannerQuote,
-  randomQuoteLoading,
-  refetchBannerQuote,
   updateBannerQuote,
   updateBannerQuoteLoading,
   generateBannerQuoteImage,
   generateBannerQuoteImageLoading,
 } = useBannerQuote()
+
+const { refetchRandomQuoteId, randomQuoteIdLoading } = useRandomQuoteId()
+const { push } = useRouter()
 
 type Schema = v.InferOutput<typeof schema>
 
@@ -75,8 +78,7 @@ async function handleGenerateQuoteImage() {
   }
 
   try {
-    const res = await generateBannerQuoteImage({ quoteId: bannerQuote.value?.id })
-    bannerQuote.value = res?.data?.generateQuoteImage
+    await generateBannerQuoteImage({ quoteId: bannerQuote.value?.id })
     toast.add({ title: 'Success', description: 'Image generated successfully!', color: 'success' })
   }
   catch (err) {
@@ -91,14 +93,18 @@ async function handleCreateQuote(event: FormSubmitEvent<Schema>) {
     isPublic: !event.data.isPrivate,
   }
   try {
-    const res = await createQuote({ createQuoteInput })
-    bannerQuote.value = res?.data?.createQuote
+    await createQuote({ createQuoteInput })
     toast.add({ title: 'Success', description: 'Quote inserted successfully!', color: 'success' })
     resetCreate()
   }
   catch (err) {
     toast.add({ title: 'Error', description: createQuoteError.value?.message ?? err?.toString() ?? '', color: 'error' })
   }
+}
+
+async function handleRefetchBannerQuote() {
+  const randomQuoteId = await refetchRandomQuoteId()
+  push({ name: 'quote', params: { quoteId: randomQuoteId?.data.getRandomQuoteId } })
 }
 </script>
 
@@ -137,10 +143,10 @@ async function handleCreateQuote(event: FormSubmitEvent<Schema>) {
       <UButton
         class="cursor-pointer ml-auto"
         variant="outline"
-        :loading="randomQuoteLoading"
+        :loading="randomQuoteIdLoading"
         size="sm"
         icon="i-lucide-skip-forward"
-        @click="refetchBannerQuote"
+        @click="handleRefetchBannerQuote"
       >
         Next
       </UButton>

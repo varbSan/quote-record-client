@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
+import { useRouteParams } from '@/composables/useRouteParams'
 import { routes } from '@/router/routes'
 import { computed, ref, watch } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 const { currentRoute, push } = useRouter()
 const activeView = ref(currentRoute.value.name)
+const { getParams } = useRouteParams()
 const viewItems = computed<TabsItem[]>(() =>
   routes
     ?.find(route => route.name === 'home')
     ?.children
-    ?.map(child => ({ value: child.name as string, icon: child.meta?.icon as string, label: child.meta?.label as string }))
+    ?.map(child => ({
+      value: child.name as string,
+      icon: child.meta?.icon as string,
+      label: child.meta?.label as string,
+    }))
     ?? [],
 )
 
@@ -22,7 +28,10 @@ watch(currentRoute, () => {
 
 watch(activeView, () => {
   if (activeView.value !== currentRoute.value.name) {
-    push({ name: activeView.value as string })
+    push({
+      name: activeView.value as string,
+      params: getParams(activeView.value as string),
+    })
   }
 })
 </script>

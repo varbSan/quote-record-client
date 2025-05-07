@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BreadcrumbItem, NavigationMenuItem } from '@nuxt/ui'
 import type { RouteLocationMatched, RouteLocationNormalizedLoadedGeneric, RouteRecordRaw } from 'vue-router'
+import { useRouteParams } from '@/composables/useRouteParams'
 import { useScreenSize } from '@/composables/useScreenSize'
 import { useSession } from '@clerk/vue'
 import { onClickOutside } from '@vueuse/core'
@@ -16,6 +17,7 @@ const route = useRoute()
 const { currentRoute } = useRouter()
 const matchedRoutes = computed(() => route.matched)
 const isNavBarOpen = ref(false)
+const { getParams } = useRouteParams()
 
 const breadcrumbsItems = computed( // return current route and its siblings formatted (filter out signin route)
   () => matchedRoutes.value?.map(route => formatBreadcrumbRouteItem(
@@ -68,7 +70,7 @@ function formatBreadcrumbRouteItem(
     label: route.meta?.label as string,
     value: route.name as string,
     icon: route.meta?.icon as string,
-    to: { name: route.name },
+    to: { name: route.name, params: getParams(route.name as string) },
     children: children.map(child => formatBreadcrumbRouteItem(child)),
   }
 }
@@ -85,7 +87,7 @@ function formatNavBarRouteItem(
     // active: !!matchedRoutes.value.find((matchedRoute) => matchedRoute.name === route.name),
     defaultOpen: !!matchedRoutes.value.find(matchedRoute => matchedRoute.name === route.name),
     icon: route.meta?.icon as string,
-    to: { name: route.name },
+    to: { name: route.name, params: getParams(route.name as string) },
     children: children.map(child => formatNavBarRouteItem(child)),
   }
 }

@@ -46,10 +46,10 @@ function formatQuoteItem(quote: GetQuotesQuery['getQuotes'][number]): CommandPal
     slot: 'dropdown' as const,
     label: quote.text,
     value: quote.id,
-    onSelect: (event: Event) => {
+    onSelect: () => {
       push({
-        name: 'quotes',
-        query: { searchTerm: event?.target?.nodeName === 'BUTTON' ? searchTerm.value : quote.text },
+        name: 'quote',
+        params: { quoteId: quote.id },
       })
       isSearchModalOpen.value = false
     },

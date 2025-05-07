@@ -13,14 +13,14 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     name: 'home',
-    redirect: '/home/quote',
+    redirect: '/home/quotes',
     beforeEnter: authGuard,
     component: PgHome,
     meta: { label: 'Dashboard', icon: 'i-lucide-home' },
     children: [
       {
         name: 'quote',
-        path: 'quote',
+        path: 'quotes/:quoteId',
         component: VwQuote,
         meta: { label: 'Quote', icon: 'i-lucide-pencil-ruler' },
       },
