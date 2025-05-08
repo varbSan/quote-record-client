@@ -68,7 +68,7 @@ function formatQuoteItem(quote: GetQuotesQuery['getQuotes'][number]): CommandPal
       @click="isSearchModalOpen = true"
     >
       <span>
-        {{ 'Search quotes...' }}
+        {{ 'Search quote...' }}
       </span>
       <span class="ml-auto">
         {{ '⌘K' }}

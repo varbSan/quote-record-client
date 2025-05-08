@@ -6,6 +6,7 @@ export const GET_CURRENT_USER_QUERY = graphql(`
       id
       email
       username
+      quoteCount
       createdAt
       updatedAt
     }

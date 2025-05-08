@@ -4,17 +4,20 @@ import { GET_QUOTE_QUERY } from '@/api/apollo/queries/getQuote.query'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useMutation, useQuery } from '@vue/apollo-composable'
 import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useRandomQuoteId } from './useRandomQuoteId'
 
 export function useBannerQuote() {
   const route = useRoute()
+  const { push } = useRouter()
   const toast = useToast()
+  const { randomQuoteId } = useRandomQuoteId()
 
   const {
     result: getQuoteResult,
     refetch: refetchQuote,
     loading: quoteLoading,
-  } = useQuery(GET_QUOTE_QUERY, { quoteId: Number(route.params.quoteId) }, { fetchPolicy: 'network-only' })
+  } = useQuery(GET_QUOTE_QUERY, { quoteId: Number(route.params.quoteId) })
 
   const {
     mutate: updateQuote,
@@ -28,9 +31,14 @@ export function useBannerQuote() {
   } = useMutation(GENERATE_QUOTE_IMAGE_MUTATION)
 
   const routeQuoteId = computed(() => route.params.quoteId)
-  watch(routeQuoteId, () => {
-    refetchQuote({ quoteId: Number(routeQuoteId.value) })
-  })
+  watch([routeQuoteId, randomQuoteId], () => {
+    if (routeQuoteId.value === '0' && randomQuoteId.value) {
+      push({ name: 'quote', params: { quoteId: randomQuoteId.value } })
+    }
+    else {
+      refetchQuote({ quoteId: Number(routeQuoteId.value) })
+    }
+  }, { immediate: true })
 
   const bannerQuote = computed(() => getQuoteResult.value?.getQuote)
 

@@ -13,7 +13,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     name: 'home',
-    redirect: '/home/quotes',
+    redirect: '/home/quotes/0',
     beforeEnter: authGuard,
     component: PgHome,
     meta: { label: 'Dashboard', icon: 'i-lucide-home' },

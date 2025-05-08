@@ -27,15 +27,17 @@ const {
 const { refetchRandomQuoteId, randomQuoteIdLoading } = useRandomQuoteId()
 const { push } = useRouter()
 
-type Schema = v.InferOutput<typeof schema>
+type CreateQuoteSchema = v.InferOutput<typeof schema>
 
-const stateCreateQuote = reactive<Schema>({
+const stateCreateQuote = reactive<CreateQuoteSchema>({
   text: '',
   isPrivate: true,
 })
 
 const stateEditQuoteText = ref('')
 const toast = useToast()
+
+const isImageloaded = ref(false)
 
 const mode = ref<'edit' | 'create'>()
 
@@ -64,6 +66,11 @@ function resetEdit() {
   mode.value = undefined
 }
 
+async function handleNextBannerQuote() {
+  const randomQuoteId = await refetchRandomQuoteId()
+  push({ name: 'quote', params: { quoteId: randomQuoteId?.data.getRandomQuoteId } })
+}
+
 async function handleUpdateBannerQuote() {
   await updateBannerQuote(stateEditQuoteText.value)
   resetEdit()
@@ -87,7 +94,7 @@ async function handleGenerateQuoteImage() {
   }
 }
 
-async function handleCreateQuote(event: FormSubmitEvent<Schema>) {
+async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
   const createQuoteInput = {
     text: event.data.text,
     isPublic: !event.data.isPrivate,
@@ -100,11 +107,6 @@ async function handleCreateQuote(event: FormSubmitEvent<Schema>) {
   catch (err) {
     toast.add({ title: 'Error', description: createQuoteError.value?.message ?? err?.toString() ?? '', color: 'error' })
   }
-}
-
-async function handleRefetchBannerQuote() {
-  const randomQuoteId = await refetchRandomQuoteId()
-  push({ name: 'quote', params: { quoteId: randomQuoteId?.data.getRandomQuoteId } })
 }
 </script>
 
@@ -134,7 +136,7 @@ async function handleRefetchBannerQuote() {
         variant="outline"
         size="sm"
         :loading="generateBannerQuoteImageLoading"
-        icon="i-lucide-wand-sparkles"
+        icon="i-lucide-image-plus"
         @click="handleGenerateQuoteImage"
       >
         Magic
@@ -146,7 +148,7 @@ async function handleRefetchBannerQuote() {
         :loading="randomQuoteIdLoading"
         size="sm"
         icon="i-lucide-skip-forward"
-        @click="handleRefetchBannerQuote"
+        @click="handleNextBannerQuote"
       >
         Next
       </UButton>
@@ -180,8 +182,9 @@ async function handleRefetchBannerQuote() {
     <p v-else class="p-4">
       {{ bannerQuote?.text }}
     </p>
-    <div v-if="bannerQuote?.imageUrl">
-      <img :src="bannerQuote?.imageUrl ?? ''" class="rounded">
+    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading">
+      <USkeleton v-if="!isImageloaded || generateBannerQuoteImageLoading" class="rounded size-[496px]" />
+      <img v-else :src="bannerQuote?.imageUrl ?? ''" class="rounded" @load="isImageloaded = true">
     </div>
   </div>
 </template>
