@@ -44,7 +44,7 @@ watch(activeView, () => {
 async function handleUpdateSeePublicQuotes() {
   await updateUser({ updateUserInput: {
     seePublicQuotes: !currentUser.value?.seePublicQuotes,
-  } })
+  } }, { update: (cache) => { cache.evict({ fieldName: 'getQuotes'}); cache.evict({ fieldName: 'getQuote'}) }})
 }
 </script>
 
