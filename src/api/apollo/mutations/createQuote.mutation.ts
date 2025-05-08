@@ -6,6 +6,7 @@ export const CREATE_QUOTE_MUTATION = graphql(`
       id
       text
       imageUrl
+      isPublic
     }
   }
 `)

@@ -1,23 +1,19 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { CREATE_QUOTE_MUTATION } from '@/api/apollo/mutations/createQuote.mutation'
 import { useBannerQuote } from '@/composables/useBannerQuote'
 import { useRandomQuoteId } from '@/composables/useRandomQuoteId'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
-import { useMutation } from '@vue/apollo-composable'
 import { onClickOutside } from '@vueuse/core'
 import * as v from 'valibot'
 import { reactive, ref, useTemplateRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const {
-  mutate: createQuote,
-  loading: createQuoteLoading,
-  error: createQuoteError,
-} = useMutation(CREATE_QUOTE_MUTATION)
-
-const {
   bannerQuote,
+  bannerQuoteText,
+  bannerQuoteIsPublic,
+  createBannerQuote,
+  createBannerQuoteLoading,
   updateBannerQuote,
   updateBannerQuoteLoading,
   generateBannerQuoteImage,
@@ -26,20 +22,23 @@ const {
 
 const { refetchRandomQuoteId, randomQuoteIdLoading } = useRandomQuoteId()
 const { push } = useRouter()
-
-type CreateQuoteSchema = v.InferOutput<typeof schema>
-
-const stateCreateQuote = reactive<CreateQuoteSchema>({
-  text: '',
-  isPrivate: true,
-})
-
-const stateEditQuoteText = ref('')
 const toast = useToast()
-
 const isImageloaded = ref(false)
 
 const mode = ref<'edit' | 'create'>()
+
+type CreateQuoteSchema = v.InferOutput<typeof schema>
+type UpdateQuoteSchema = v.InferOutput<typeof schema>
+
+const stateCreateQuote = reactive<CreateQuoteSchema>({
+  text: '',
+  isPublic: false,
+})
+
+const stateUpdateQuote = reactive<UpdateQuoteSchema>({
+  text: bannerQuoteText.value,
+  isPublic: bannerQuoteIsPublic.value,
+})
 
 const target = useTemplateRef<HTMLElement>('container')
 onClickOutside(target, () => {
@@ -52,32 +51,30 @@ const schema = v.object({
     v.string('Please enter a quote'),
     v.minLength(2, 'Please enter a quote that is minimum than 2 characters'),
   ),
-  isPrivate: v.boolean(),
+  isPublic: v.boolean(),
 })
 
 function resetCreate() {
-  stateCreateQuote.isPrivate = true
+  stateCreateQuote.isPublic = false
   stateCreateQuote.text = ''
   mode.value = undefined
 }
 
 function resetEdit() {
-  stateEditQuoteText.value = bannerQuote.value?.text ?? ''
+  stateUpdateQuote.isPublic = bannerQuoteIsPublic.value
+  stateUpdateQuote.text = bannerQuoteText.value
   mode.value = undefined
 }
+
+watch(bannerQuote, () => {
+  resetEdit()
+  resetCreate()
+}, { immediate: true })
 
 async function handleNextBannerQuote() {
   const randomQuoteId = await refetchRandomQuoteId()
   push({ name: 'quote', params: { quoteId: randomQuoteId?.data.getRandomQuoteId } })
 }
-
-async function handleUpdateBannerQuote() {
-  await updateBannerQuote(stateEditQuoteText.value)
-  resetEdit()
-}
-watch(bannerQuote, () => {
-  stateEditQuoteText.value = bannerQuote.value?.text ?? ''
-}, { immediate: true })
 
 async function handleGenerateQuoteImage() {
   if (!bannerQuote.value?.id) {
@@ -94,19 +91,24 @@ async function handleGenerateQuoteImage() {
   }
 }
 
+async function handleUpdateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
+  if (!bannerQuote.value?.id) {
+    throw new Error('Invalid quote id')
+  }
+  const updateQuoteInput = {
+    id: bannerQuote.value?.id,
+    text: event.data.text,
+    isPublic: event.data.isPublic,
+  }
+  return updateBannerQuote(updateQuoteInput)
+}
+
 async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
   const createQuoteInput = {
     text: event.data.text,
-    isPublic: !event.data.isPrivate,
+    isPublic: event.data.isPublic,
   }
-  try {
-    await createQuote({ createQuoteInput })
-    toast.add({ title: 'Success', description: 'Quote inserted successfully!', color: 'success' })
-    resetCreate()
-  }
-  catch (err) {
-    toast.add({ title: 'Error', description: createQuoteError.value?.message ?? err?.toString() ?? '', color: 'error' })
-  }
+  return createBannerQuote(createQuoteInput)
 }
 </script>
 
@@ -154,26 +156,30 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
       </UButton>
     </div>
     <div v-if="mode === 'edit'" class="p-4 w-full flex flex-col">
-      <UTextarea v-model="stateEditQuoteText" class="w-full mb-2" />
-      <UButton
-        :loading="updateBannerQuoteLoading"
-        class="cursor-pointer ml-auto"
-        size="sm"
-        @click="handleUpdateBannerQuote"
-      >
-        Update
-      </UButton>
+      <UForm :schema="schema" :state="stateUpdateQuote" class="flex flex-col gap-2" @submit="handleUpdateQuote">
+        <UFormField label="Text" name="quoteText">
+          <UTextarea v-model="stateUpdateQuote.text" type="text" class="w-full text-base" />
+        </UFormField>
+        <UFormField label="Make quote public" name="quoteIsPublic" class="flex self-end text-xs items-end">
+          <UCheckbox v-model="stateUpdateQuote.isPublic" value="" class="ml-2" />
+        </UFormField>
+        <div class="flex justify-end mt-auto">
+          <UButton :loading="updateBannerQuoteLoading" type="submit" size="sm" class="cursor-pointer">
+            Update
+          </UButton>
+        </div>
+      </UForm>
     </div>
     <div v-else-if="mode === 'create'" class="p-4">
       <UForm :schema="schema" :state="stateCreateQuote" class="flex flex-col gap-2" @submit="handleCreateQuote">
         <UFormField label="Text" name="quoteText">
-          <UTextarea v-model="stateCreateQuote.text" type="text" class="w-full text-base" variant="soft" />
+          <UTextarea v-model="stateCreateQuote.text" type="text" class="w-full text-base" />
         </UFormField>
-        <UFormField label="Make quote private" name="quoteIsPrivate" class="flex self-end text-xs items-end">
-          <UCheckbox v-model="stateCreateQuote.isPrivate" value="" class="ml-2" />
+        <UFormField label="Make quote public" name="quoteIsPublic" class="flex self-end text-xs items-end">
+          <UCheckbox v-model="stateCreateQuote.isPublic" value="" class="ml-2" />
         </UFormField>
         <div class="flex justify-end mt-auto">
-          <UButton :loading="createQuoteLoading" type="submit" size="sm" class="cursor-pointer">
+          <UButton :loading="createBannerQuoteLoading" type="submit" size="sm" class="cursor-pointer">
             Create
           </UButton>
         </div>
@@ -182,9 +188,9 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
     <p v-else class="p-4">
       {{ bannerQuote?.text }}
     </p>
-    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading">
-      <USkeleton v-if="!isImageloaded || generateBannerQuoteImageLoading" class="rounded size-[496px]" />
-      <img v-else :src="bannerQuote?.imageUrl ?? ''" class="rounded" @load="isImageloaded = true">
+    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading" class="size-full">
+      <USkeleton v-if="!isImageloaded || generateBannerQuoteImageLoading" class="rounded size-full" />
+      <img v-show="!generateBannerQuoteImageLoading && isImageloaded" :src="bannerQuote?.imageUrl ?? ''" class="rounded size-full" @load="isImageloaded = true">
     </div>
   </div>
 </template>

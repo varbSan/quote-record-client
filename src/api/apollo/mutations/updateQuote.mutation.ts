@@ -5,6 +5,7 @@ export const UPDATE_QUOTE_MUTATION = graphql(`
     updateQuote(updateQuoteInput: $updateQuoteInput) {
       id
       text
+      isPublic
     }
   }
 `)

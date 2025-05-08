@@ -1,3 +1,5 @@
+import type { CreateQuoteInput, UpdateQuoteInput } from '@/gql/graphql'
+import { CREATE_QUOTE_MUTATION } from '@/api/apollo/mutations/createQuote.mutation'
 import { GENERATE_QUOTE_IMAGE_MUTATION } from '@/api/apollo/mutations/generateQuoteImage.mutation'
 import { UPDATE_QUOTE_MUTATION } from '@/api/apollo/mutations/updateQuote.mutation'
 import { GET_QUOTE_QUERY } from '@/api/apollo/queries/getQuote.query'
@@ -12,6 +14,12 @@ export function useBannerQuote() {
   const { push } = useRouter()
   const toast = useToast()
   const { randomQuoteId } = useRandomQuoteId()
+
+  const {
+    mutate: createQuote,
+    loading: createQuoteLoading,
+    error: createQuoteError,
+  } = useMutation(CREATE_QUOTE_MUTATION)
 
   const {
     result: getQuoteResult,
@@ -41,26 +49,45 @@ export function useBannerQuote() {
   }, { immediate: true })
 
   const bannerQuote = computed(() => getQuoteResult.value?.getQuote)
+  const bannerQuoteText = computed(() => bannerQuote.value?.text ?? '')
+  const bannerQuoteIsPublic = computed(() => !!bannerQuote.value?.isPublic)
 
-  async function updateBannerQuote(text: string) {
+  async function updateBannerQuote(updateQuoteInput: UpdateQuoteInput) {
     try {
       if (!bannerQuote.value?.id) {
         throw new Error('Invalid quote id')
       }
-      await updateQuote({ updateQuoteInput: { id: bannerQuote.value?.id, text } })
+      await updateQuote({ updateQuoteInput })
       toast.add({ title: 'Success', description: 'Quote updated successfully!', color: 'success' })
     }
     catch (err) {
-      toast.add({ title: 'Error', description: updateQuoteError.value?.message ?? err?.toString() ?? '', color: 'error' })
+      console.error(err, updateQuoteError.value?.message)
+      toast.add({ title: 'Error', description: 'Something went wrong. Try again later.', color: 'error' })
+    }
+  }
+
+  async function createBannerQuote(createQuoteInput: CreateQuoteInput) {
+    try {
+      const res = await createQuote({ createQuoteInput })
+      push({ name: 'quote', params: { quoteId: res?.data?.createQuote.id } })
+      toast.add({ title: 'Success', description: 'Quote created successfully!', color: 'success' })
+    }
+    catch (err) {
+      console.error(err, createQuoteError.value?.message)
+      toast.add({ title: 'Error', description: 'Something went wrong. Try again later.', color: 'error' })
     }
   }
 
   return {
     bannerQuote,
+    bannerQuoteText,
+    bannerQuoteIsPublic,
     quoteLoading,
     refetchQuote,
     updateBannerQuote,
     updateBannerQuoteLoading: updateQuoteLoading,
+    createBannerQuote,
+    createBannerQuoteLoading: createQuoteLoading,
     generateBannerQuoteImage: generateQuoteImage,
     generateBannerQuoteImageLoading: generateQuoteImageLoading,
   }
