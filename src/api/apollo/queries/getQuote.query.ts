@@ -5,6 +5,9 @@ export const GET_QUOTE_QUERY = graphql(`
     getQuote(quoteId: $quoteId) {
       id
       text
+      user {
+        id
+      }
       isPublic
       imageUrl
     }

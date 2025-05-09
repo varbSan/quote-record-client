@@ -7,6 +7,7 @@ import { UPDATE_QUOTE_MUTATION } from '@/api/apollo/mutations/updateQuote.mutati
 import { GET_QUOTES_QUERY } from '@/api/apollo/queries/getQuotes.query'
 import { useCurrentUser } from '@/composables/useCurrentUser'
 import Button from '@nuxt/ui/runtime/components/Button.vue'
+import Skeleton from '@nuxt/ui/runtime/components/Skeleton.vue'
 import Textarea from '@nuxt/ui/runtime/components/Textarea.vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
@@ -14,7 +15,7 @@ import { getPaginationRowModel } from '@tanstack/vue-table'
 import { useMutation, useQuery } from '@vue/apollo-composable'
 import { onClickOutside } from '@vueuse/core'
 import { ImagePlus, LoaderCircle, Pencil, Trash } from 'lucide-vue-next'
-import { computed, h, ref, useTemplateRef, watch } from 'vue'
+import { computed, h, reactive, ref, useTemplateRef, watch } from 'vue'
 
 const { currentUser } = useCurrentUser()
 const { currentRoute, push } = useRouter()
@@ -65,6 +66,12 @@ const isActiveQuote = (id: number) => activeEditQuote.value === id
 
 const tableRef = useTemplateRef<HTMLTableElement>('table')
 onClickOutside(tableRef, () => activeEditQuote.value = undefined)
+
+function isQuoteOwner(quoteUserId: number) {
+  return quoteUserId === currentUser.value?.id
+}
+
+const loadedImageQuoteId = reactive<Record<string, boolean>>({})
 
 function resetEdit() {
   editQuoteTextState.value = ''
@@ -182,21 +189,33 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
     accessorKey: 'image',
     header: 'Image',
     cell: ({ row }) => {
-      return h('div', { class: 'size-12' }, h(
-        'img',
-        {
-          src: row.original.imageUrl,
-          class: ['cursor-pointer size-full hover:scale-300 z-50 rounded outline-[0.5px] transition'],
-          onClick: () => push({ name: 'quote', params: { quoteId: row.original.id } }),
-        },
-      ))
+      return h('div', { class: 'size-12' }, [
+        h(
+          'img',
+          {
+            src: row.original.imageUrl,
+            class: [
+              'cursor-pointer size-full hover:scale-300 z-50 rounded outline-[0.5px] transition',
+              { hidden: !loadedImageQuoteId[row.original.id] },
+            ],
+            onClick: () => push({ name: 'quote', params: { quoteId: row.original.id } }),
+            onLoad: () => loadedImageQuoteId[row.original.id] = true,
+          },
+        ),
+        h(
+          Skeleton,
+          {
+            class: ['size-full', { hidden: loadedImageQuoteId[row.original.id] }],
+          },
+        ),
+      ])
     },
   },
   {
     accessorKey: 'actions',
     header: 'Actions',
-    cell: ({ row }) => {
-      return h('div', { class: 'flex items-center justify-end gap-x-1' }, [
+    cell: ({ row }) => [
+      h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: !isQuoteOwner(row.original.user.id) }] }, [
         h(ImagePlus, {
           class: ['cursor-pointer hover:text-highlighted', { hidden: isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
@@ -206,7 +225,6 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
         h(LoaderCircle, {
           class: ['cursor-not-allowed disabled animate-spin', { hidden: !isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
-          title: 'generate',
         }),
         h(Pencil, {
           class: 'cursor-pointer hover:text-highlighted',
@@ -223,11 +241,28 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
         h(LoaderCircle, {
           class: ['cursor-not-allowed disabled animate-spin', { hidden: !isDeleteQuoteLoading(row.original.id) }],
           size: 14,
+        }),
+      ]),
+      h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: isQuoteOwner(row.original.id) }] }, [
+        h(ImagePlus, {
+          class: 'cursor-not-allowed text-default/20',
+          size: 14,
           title: 'generate',
         }),
-      ])
-    },
+        h(Pencil, {
+          class: 'cursor-not-allowed text-default/20',
+          size: 14,
+          title: 'edit',
+        }),
+        h(Trash, {
+          class: 'cursor-not-allowed text-default/20',
+          size: 14,
+          title: 'delete',
+        }),
+      ]),
+    ],
   },
+
 ]
 </script>
 

@@ -493,22 +493,6 @@
             "deprecationReason": null
           },
           {
-            "name": "getLastQuote",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "QuoteType",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "getQuote",
             "description": null,
             "args": [

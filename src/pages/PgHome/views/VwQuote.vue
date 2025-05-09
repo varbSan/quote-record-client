@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { useBannerQuote } from '@/composables/useBannerQuote'
+import { useCurrentUser } from '@/composables/useCurrentUser'
 import { useRandomQuoteId } from '@/composables/useRandomQuoteId'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { onClickOutside } from '@vueuse/core'
@@ -10,6 +11,7 @@ import { useRouter } from 'vue-router'
 
 const {
   bannerQuote,
+  bannerQuoteUser,
   bannerQuoteText,
   bannerQuoteIsPublic,
   createBannerQuote,
@@ -22,6 +24,7 @@ const {
 
 const { refetchRandomQuoteId, randomQuoteIdLoading } = useRandomQuoteId()
 const { push } = useRouter()
+const { currentUser } = useCurrentUser()
 const toast = useToast()
 const isImageloaded = ref(false)
 
@@ -125,6 +128,7 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
         Create
       </UButton>
       <UButton
+        v-if="bannerQuoteUser?.id === currentUser?.id"
         class="cursor-pointer"
         variant="outline"
         size="sm"
@@ -134,6 +138,7 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
         Edit
       </UButton>
       <UButton
+        v-if="bannerQuoteUser?.id === currentUser?.id"
         class="cursor-pointer "
         variant="outline"
         size="sm"
@@ -188,7 +193,7 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
     <p v-else class="p-4">
       {{ bannerQuote?.text }}
     </p>
-    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading" class="size-full">
+    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading" class="size-[31rem]">
       <USkeleton v-if="!isImageloaded || generateBannerQuoteImageLoading" class="rounded size-full" />
       <img v-show="!generateBannerQuoteImageLoading && isImageloaded" :src="bannerQuote?.imageUrl ?? ''" class="rounded size-full" @load="isImageloaded = true">
     </div>

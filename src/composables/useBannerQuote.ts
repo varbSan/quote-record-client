@@ -43,12 +43,13 @@ export function useBannerQuote() {
     if (routeQuoteId.value === '0' && randomQuoteId.value) {
       push({ name: 'quote', params: { quoteId: randomQuoteId.value } })
     }
-    else {
+    else if (routeQuoteId.value) {
       refetchQuote({ quoteId: Number(routeQuoteId.value) })
     }
   }, { immediate: true })
 
   const bannerQuote = computed(() => getQuoteResult.value?.getQuote)
+  const bannerQuoteUser = computed(() => getQuoteResult.value?.getQuote.user)
   const bannerQuoteText = computed(() => bannerQuote.value?.text ?? '')
   const bannerQuoteIsPublic = computed(() => !!bannerQuote.value?.isPublic)
 
@@ -80,6 +81,7 @@ export function useBannerQuote() {
 
   return {
     bannerQuote,
+    bannerQuoteUser,
     bannerQuoteText,
     bannerQuoteIsPublic,
     quoteLoading,

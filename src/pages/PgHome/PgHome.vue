@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
 import { UPDATE_USER_MUTATION } from '@/api/apollo/mutations/updateUser.mutation'
+import { useBannerQuote } from '@/composables/useBannerQuote'
 import { useCurrentUser } from '@/composables/useCurrentUser'
 import { useRouteParams } from '@/composables/useRouteParams'
 import { routes } from '@/router/routes'
@@ -10,6 +11,7 @@ import { RouterView, useRouter } from 'vue-router'
 
 const { mutate: updateUser } = useMutation(UPDATE_USER_MUTATION)
 
+const { refetchQuote } = useBannerQuote()
 const { currentUser } = useCurrentUser()
 const { currentRoute, push } = useRouter()
 const activeView = ref(currentRoute.value.name)
@@ -42,9 +44,10 @@ watch(activeView, () => {
 })
 
 async function handleUpdateSeePublicQuotes() {
-  await updateUser({ updateUserInput: {
-    seePublicQuotes: !currentUser.value?.seePublicQuotes,
-  } }, { update: (cache) => { cache.evict({ fieldName: 'getQuotes'}); cache.evict({ fieldName: 'getQuote'}) }})
+  const updateUserInput = { seePublicQuotes: !currentUser.value?.seePublicQuotes }
+  await updateUser({ updateUserInput }, {
+    update: (cache) => { cache.evict({ fieldName: 'getQuotes' }); refetchQuote() },
+  })
 }
 </script>
 

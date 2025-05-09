@@ -5,6 +5,9 @@ export const GET_QUOTES_QUERY = graphql(`
     getQuotes(searchTerm: $searchTerm, limit: $limit) {
       id
       text
+      user {
+        id
+      }
       imageUrl
       updatedAt
     }
