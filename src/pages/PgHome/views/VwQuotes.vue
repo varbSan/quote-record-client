@@ -223,7 +223,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
           onClick: () => handleGenerateQuoteImage(row.original.id),
         }),
         h(LoaderCircle, {
-          class: ['cursor-not-allowed disabled animate-spin', { hidden: !isGenerateQuoteImageLoading(row.original.id) }],
+          class: ['cursor-default animate-spin', { hidden: !isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
         }),
         h(Pencil, {
@@ -239,23 +239,23 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
           onClick: () => handleDeleteQuote(row.original.id),
         }),
         h(LoaderCircle, {
-          class: ['cursor-not-allowed disabled animate-spin', { hidden: !isDeleteQuoteLoading(row.original.id) }],
+          class: ['cursor-default animate-spin', { hidden: !isDeleteQuoteLoading(row.original.id) }],
           size: 14,
         }),
       ]),
       h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: isQuoteOwner(row.original.user.id) }] }, [
         h(ImagePlus, {
-          class: 'cursor-not-allowed text-default/20',
+          class: 'cursor-default text-default/20',
           size: 14,
           title: 'generate',
         }),
         h(Pencil, {
-          class: 'cursor-not-allowed text-default/20',
+          class: 'cursor-default text-default/20',
           size: 14,
           title: 'edit',
         }),
         h(Trash, {
-          class: 'cursor-not-allowed text-default/20',
+          class: 'cursor-default text-default/20',
           size: 14,
           title: 'delete',
         }),
