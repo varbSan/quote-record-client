@@ -243,7 +243,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
           size: 14,
         }),
       ]),
-      h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: isQuoteOwner(row.original.id) }] }, [
+      h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: isQuoteOwner(row.original.user.id) }] }, [
         h(ImagePlus, {
           class: 'cursor-not-allowed text-default/20',
           size: 14,
