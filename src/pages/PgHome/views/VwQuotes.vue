@@ -297,15 +297,15 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
         }),
       ]),
       h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: isQuoteOwner(row.original.user.id) }] }, [
-        h(ImagePlus, {
-          class: 'cursor-default text-default/20',
-          size: 14,
-          title: 'generate',
-        }),
         h(Pencil, {
           class: 'cursor-default text-default/20',
           size: 14,
           title: 'edit',
+        }),
+        h(ImagePlus, {
+          class: 'cursor-default text-default/20',
+          size: 14,
+          title: 'generate',
         }),
         h(Trash, {
           class: 'cursor-default text-default/20',
