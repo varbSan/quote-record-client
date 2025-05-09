@@ -193,7 +193,7 @@ async function handleCreateQuote(event: FormSubmitEvent<CreateQuoteSchema>) {
     <p v-else class="p-4">
       {{ bannerQuote?.text }}
     </p>
-    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading" class="size-[31rem]">
+    <div v-if="(bannerQuote?.imageUrl && mode !== 'create') || generateBannerQuoteImageLoading" class="size-full md:size-[31rem]">
       <USkeleton v-if="!isImageloaded || generateBannerQuoteImageLoading" class="rounded size-full" />
       <img v-show="!generateBannerQuoteImageLoading && isImageloaded" :src="bannerQuote?.imageUrl ?? ''" class="rounded size-full" @load="isImageloaded = true">
     </div>
