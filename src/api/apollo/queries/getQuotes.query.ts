@@ -8,6 +8,7 @@ export const GET_QUOTES_QUERY = graphql(`
       user {
         id
       }
+      isPublic
       imageUrl
       updatedAt
     }

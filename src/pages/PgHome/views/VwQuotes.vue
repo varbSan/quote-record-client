@@ -9,6 +9,7 @@ import { useCurrentUser } from '@/composables/useCurrentUser'
 import Button from '@nuxt/ui/runtime/components/Button.vue'
 import Skeleton from '@nuxt/ui/runtime/components/Skeleton.vue'
 import Textarea from '@nuxt/ui/runtime/components/Textarea.vue'
+import Checkbox from '@nuxt/ui/runtime/components/Checkbox.vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
 import { getPaginationRowModel } from '@tanstack/vue-table'
@@ -16,6 +17,7 @@ import { useMutation, useQuery } from '@vue/apollo-composable'
 import { onClickOutside } from '@vueuse/core'
 import { ImagePlus, LoaderCircle, Pencil, Trash } from 'lucide-vue-next'
 import { computed, h, reactive, ref, useTemplateRef, watch } from 'vue'
+import * as v from 'valibot'
 
 const { currentUser } = useCurrentUser()
 const { currentRoute, push } = useRouter()
@@ -57,15 +59,29 @@ const pagination = ref({
   pageSize: 5,
 })
 
+const schema = v.object({
+  text: v.pipe(
+    v.string('Please enter a quote'),
+    v.minLength(2, 'Please enter a quote that is minimum than 2 characters'),
+  ),
+  isPublic: v.boolean(),
+})
+
+type UpdateQuoteSchema = v.InferOutput<typeof schema>
+
+const stateUpdateQuote = reactive<UpdateQuoteSchema>({
+  text: '',
+  isPublic: false,
+})
+
 const mutatingQuoteId = ref<number>()
-const editQuoteTextState = ref('')
 const data = computed(() => result.value?.getQuotes ?? [])
 
-const activeEditQuote = ref<number>()
-const isActiveQuote = (id: number) => activeEditQuote.value === id
+const activeEditQuoteId = ref<number>()
+const isActiveQuote = (id: number) => activeEditQuoteId.value === id
 
 const tableRef = useTemplateRef<HTMLTableElement>('table')
-onClickOutside(tableRef, () => activeEditQuote.value = undefined)
+onClickOutside(tableRef, () => activeEditQuoteId.value = undefined)
 
 function isQuoteOwner(quoteUserId: number) {
   return quoteUserId === currentUser.value?.id
@@ -74,13 +90,19 @@ function isQuoteOwner(quoteUserId: number) {
 const loadedImageQuoteId = reactive<Record<string, boolean>>({})
 
 function resetEdit() {
-  editQuoteTextState.value = ''
-  activeEditQuote.value = undefined
+  stateUpdateQuote.text = ''
+  stateUpdateQuote.isPublic = false
+  activeEditQuoteId.value = undefined
 }
 
-function editQuote(id: number, text: string) {
-  editQuoteTextState.value = text
-  return activeEditQuote.value === id ? activeEditQuote.value = undefined : activeEditQuote.value = id
+function editQuote(id: number, text: string, isPublic: boolean) {
+  if (activeEditQuoteId.value === id) {
+    resetEdit()
+    return
+  }
+  activeEditQuoteId.value = id
+  stateUpdateQuote.text = text
+  stateUpdateQuote.isPublic = isPublic
 }
 
 function isGenerateQuoteImageLoading(id: number) {
@@ -92,8 +114,9 @@ function isDeleteQuoteLoading(id: number) {
 }
 
 async function handleUpdateQuote(id: number) {
+  const updateQuoteInput = { id, ...stateUpdateQuote }
   try {
-    await updateQuote({ updateQuoteInput: { id, text: editQuoteTextState.value } })
+    await updateQuote({ updateQuoteInput })
     resetEdit()
     toast.add({ title: 'Success', description: 'Quote updated successfully!', color: 'success' })
   }
@@ -128,7 +151,7 @@ async function handleGenerateQuoteImage(quoteId: number) {
   mutatingQuoteId.value = undefined
 }
 
-async function changePageIndex(p: number) {
+async function changePageIndex(tablePage: number) {
   if (limit.value <= userQuoteCount.value) {
     limit.value += 50
   }
@@ -136,7 +159,9 @@ async function changePageIndex(p: number) {
     limit.value = userQuoteCount.value
   }
 
-  tableRef.value?.tableApi?.setPageIndex(p - 1)
+  const tablePageIndex = tablePage - 1
+  push({ name: 'quotes', query: { tablePageIndex } })
+
 
   refetch({
     searchTerm: currentRoute.value.query?.searchTerm?.toString(),
@@ -162,12 +187,40 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
           h(
             Textarea,
             {
-              'modelValue': editQuoteTextState.value,
+              'modelValue': stateUpdateQuote.text,
               'onUpdate:modelValue': (val: string | number) => {
-                editQuoteTextState.value = val.toString()
+                stateUpdateQuote.text = val.toString()
               },
               'class': ['mb-1', { hidden: !isActiveQuote(row.original.id) }],
             },
+          ),
+          h(
+          'p',
+            {
+              class: ['flex justify-end cursor-pointer hover:text-highlighted mb-1', { hidden: !isActiveQuote(row.original.id) }],
+            },
+            [
+              h(
+                'span',
+                {
+                  class: 'text-xs cursor-pointer hover:text-highlighted',
+                  onClick: () => stateUpdateQuote.isPublic = !stateUpdateQuote.isPublic,
+                },
+                'Make quote public'
+              ),
+              h(
+                Checkbox,
+                {
+                  'modelValue': stateUpdateQuote.isPublic,
+                  'onUpdate:modelValue': (val: boolean) => {
+                    stateUpdateQuote.isPublic = val
+                  },
+                  size: 'xs',
+                  class: 'ml-1 cursor-pointer',
+                  onClick: () => stateUpdateQuote.isPublic = !stateUpdateQuote.isPublic
+                },
+              ),
+            ]
           ),
           h(
             Button,
@@ -216,6 +269,12 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
     header: 'Actions',
     cell: ({ row }) => [
       h('div', { class: ['flex items-center justify-end gap-x-1', { hidden: !isQuoteOwner(row.original.user.id) }] }, [
+        h(Pencil, {
+          class: 'cursor-pointer hover:text-highlighted',
+          size: 14,
+          title: 'edit',
+          onClick: () => editQuote(row.original.id, row.original.text, row.original.isPublic),
+        }),  
         h(ImagePlus, {
           class: ['cursor-pointer hover:text-highlighted', { hidden: isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
@@ -225,12 +284,6 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
         h(LoaderCircle, {
           class: ['cursor-default animate-spin', { hidden: !isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
-        }),
-        h(Pencil, {
-          class: 'cursor-pointer hover:text-highlighted',
-          size: 14,
-          title: 'edit',
-          onClick: () => editQuote(row.original.id, row.original.text),
         }),
         h(Trash, {
           class: ['cursor-pointer hover:text-highlighted', { hidden: isDeleteQuoteLoading(row.original.id) }],
