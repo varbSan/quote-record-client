@@ -68,13 +68,12 @@ async function handleUpdateSeePublicQuotes() {
       <UButton
         class="cursor-pointer dark:text-white/40 text-black/30"
         variant="outline"
+        :label="!!currentUser?.quoteCount ? undefined : (currentUser?.seePublicQuotes ? 'Hide public quotes' : 'Show public quotes')"
         color="neutral"
         size="xs"
         :icon="currentUser?.seePublicQuotes ? 'i-lucide-eye' : 'i-lucide-eye-off'"
         @click.stop="handleUpdateSeePublicQuotes"
-      >
-        {{ !currentUser?.quoteCount ? currentUser?.seePublicQuotes ? 'Hide public quotes' : 'Show public quotes' : ''}}
-      </UButton>
+      />
       <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
     </div>
     <section class="space-y-4 outline-1 outline-black/15 dark:outline-white/40 rounded-lg p-4 mb-2.5">
