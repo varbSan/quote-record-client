@@ -7,17 +7,17 @@ import { UPDATE_QUOTE_MUTATION } from '@/api/apollo/mutations/updateQuote.mutati
 import { GET_QUOTES_QUERY } from '@/api/apollo/queries/getQuotes.query'
 import { useCurrentUser } from '@/composables/useCurrentUser'
 import Button from '@nuxt/ui/runtime/components/Button.vue'
+import Checkbox from '@nuxt/ui/runtime/components/Checkbox.vue'
 import Skeleton from '@nuxt/ui/runtime/components/Skeleton.vue'
 import Textarea from '@nuxt/ui/runtime/components/Textarea.vue'
-import Checkbox from '@nuxt/ui/runtime/components/Checkbox.vue'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useRouter } from '@nuxt/ui/runtime/vue/stubs.js'
 import { getPaginationRowModel } from '@tanstack/vue-table'
 import { useMutation, useQuery } from '@vue/apollo-composable'
 import { onClickOutside } from '@vueuse/core'
 import { ImagePlus, LoaderCircle, Pencil, Trash } from 'lucide-vue-next'
-import { computed, h, reactive, ref, useTemplateRef, watch } from 'vue'
 import * as v from 'valibot'
+import { computed, h, reactive, ref, useTemplateRef, watch } from 'vue'
 
 const { currentUser } = useCurrentUser()
 const { currentRoute, push } = useRouter()
@@ -151,7 +151,7 @@ async function handleGenerateQuoteImage(quoteId: number) {
   mutatingQuoteId.value = undefined
 }
 
-async function changePageIndex(tablePage: number) {
+async function changePageIndex(pagination: number) {
   if (limit.value <= userQuoteCount.value) {
     limit.value += 50
   }
@@ -159,9 +159,8 @@ async function changePageIndex(tablePage: number) {
     limit.value = userQuoteCount.value
   }
 
-  const tablePageIndex = tablePage - 1
-  push({ name: 'quotes', query: { tablePageIndex } })
-
+  const tablePageIndex = pagination - 1
+  tableRef.value?.tableApi?.setPageIndex(tablePageIndex)
 
   refetch({
     searchTerm: currentRoute.value.query?.searchTerm?.toString(),
@@ -195,7 +194,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
             },
           ),
           h(
-          'p',
+            'p',
             {
               class: ['flex justify-end cursor-pointer hover:text-highlighted mb-1', { hidden: !isActiveQuote(row.original.id) }],
             },
@@ -206,7 +205,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
                   class: 'text-xs cursor-pointer hover:text-highlighted',
                   onClick: () => stateUpdateQuote.isPublic = !stateUpdateQuote.isPublic,
                 },
-                'Make quote public'
+                'Make quote public',
               ),
               h(
                 Checkbox,
@@ -215,12 +214,12 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
                   'onUpdate:modelValue': (val: boolean) => {
                     stateUpdateQuote.isPublic = val
                   },
-                  size: 'xs',
-                  class: 'ml-1 cursor-pointer',
-                  onClick: () => stateUpdateQuote.isPublic = !stateUpdateQuote.isPublic
+                  'size': 'xs',
+                  'class': 'ml-1 cursor-pointer',
+                  'onClick': () => stateUpdateQuote.isPublic = !stateUpdateQuote.isPublic,
                 },
               ),
-            ]
+            ],
           ),
           h(
             Button,
@@ -274,7 +273,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
           size: 14,
           title: 'edit',
           onClick: () => editQuote(row.original.id, row.original.text, row.original.isPublic),
-        }),  
+        }),
         h(ImagePlus, {
           class: ['cursor-pointer hover:text-highlighted', { hidden: isGenerateQuoteImageLoading(row.original.id) }],
           size: 14,
@@ -334,6 +333,7 @@ const columns: TableColumn<GetQuotesQuery['getQuotes'][number]>[] = [
   <div class="flex justify-center border-t border-default pt-2">
     <UPagination
       size="xs"
+      :loading="loading"
       :default-page="(tableRef?.tableApi?.getState().pagination.pageIndex || 0) + 1"
       :items-per-page="tableRef?.tableApi?.getState().pagination.pageSize"
       :total="tableRef?.tableApi?.getFilteredRowModel().rows.length"
