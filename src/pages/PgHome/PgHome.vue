@@ -5,10 +5,10 @@ import { useBannerQuote } from '@/composables/useBannerQuote'
 import { useCurrentUser } from '@/composables/useCurrentUser'
 import { useRouteParams } from '@/composables/useRouteParams'
 import { routes } from '@/router/routes'
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useMutation } from '@vue/apollo-composable'
 import { computed, ref, watch } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 
 const { mutate: updateUser } = useMutation(UPDATE_USER_MUTATION)
 
@@ -48,18 +48,20 @@ watch(activeView, () => {
 async function handleUpdateSeePublicQuotes() {
   const updateUserInput = { seePublicQuotes: !currentUser.value?.seePublicQuotes }
   try {
-
     const res = await updateUser({ updateUserInput }, {
-      update: (cache) => { cache.evict({ fieldName: 'getQuotes' }); refetchQuote() },
+      update: (cache) => {
+        cache.evict({ fieldName: 'getQuotes' })
+        refetchQuote()
+      },
     })
     const seePublicQuotes = res?.data?.updateUser.seePublicQuotes
     toast.add({ title: 'Success', description: `Community public quotes are now ${seePublicQuotes ? 'visible' : 'hidden'}!`, color: 'success' })
-  } catch (err) {
+  }
+  catch (err) {
     console.error(err)
     toast.add({ title: 'Error', description: 'Something went wrong. Please try again later.', color: 'error' })
   }
 }
-
 </script>
 
 <template>
@@ -76,7 +78,7 @@ async function handleUpdateSeePublicQuotes() {
       />
       <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
     </div>
-    <section class="space-y-4 outline-1 outline-black/15 dark:outline-white/40 rounded-lg p-4 mb-2.5">
+    <section class="space-y-4 outfline-1 outline-black/15 dark:outline-white/40 rounded-lg p-4 mb-2.5">
       <RouterView />
     </section>
   </main>
