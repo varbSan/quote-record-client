@@ -78,7 +78,7 @@ async function handleUpdateSeePublicQuotes() {
       />
       <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
     </div>
-    <section class="space-y-4 outfline-1 outline-black/15 dark:outline-white/40 rounded-lg p-4 mb-2.5">
+    <section class="space-y-4 outline-1 outline-black/15 dark:outline-white/40 rounded-lg p-4 mb-2.5">
       <RouterView />
     </section>
   </main>

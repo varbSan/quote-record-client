@@ -22,7 +22,7 @@ const viewItems = ref<TabsItem[]>(
   routes
     ?.find(route => route.name === 'about')
     ?.children
-    ?.map(child => ({ value: child.name as string, icon: child.meta?.icon as string }))
+    ?.map(child => ({ value: child.name as string, icon: child.meta?.icon as string, label: child.meta?.label as string }))
     ?? [],
 )
 </script>
@@ -30,7 +30,7 @@ const viewItems = ref<TabsItem[]>(
 <template>
   <main class="flex flex-col max-w-[35rem] w-full mx-auto">
     <div class="flex justify-end">
-      <UTabs v-model="activeView" :items="viewItems" size="xs" />
+      <UTabs v-model="activeView" :items="viewItems" size="xs" variant="link" />
     </div>
     <RouterView />
   </main>
