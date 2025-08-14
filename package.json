@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "scripts": {
     "dev": "vite & npm run codegen:watch",
     "dev:desktop": "npx tauri dev",
