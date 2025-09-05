@@ -64,9 +64,9 @@ export const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/signin',
+    path: '/sign-in',
     name: 'signin',
     component: PgSignin,
-    meta: { label: 'Signin', icon: 'i-lucide-circle-user-round' },
+    meta: { label: 'Sign in', icon: 'i-lucide-circle-user-round' },
   },
 ]
