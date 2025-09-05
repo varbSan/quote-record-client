@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useTheme } from '@/composables/useTheme'
 import { SignIn } from '@clerk/vue'
+import { useTheme } from '@/composables/useTheme'
 
 const { authBaseTheme } = useTheme()
 </script>
