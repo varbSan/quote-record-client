@@ -45,9 +45,9 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
     "@clerk/types": "^4.51.1",
-    "@graphql-codegen/cli": "5.0.5",
-    "@graphql-codegen/client-preset": "4.7.0",
-    "@graphql-codegen/introspection": "4.0.3",
+    "@graphql-codegen/cli": "6.2.1",
+    "@graphql-codegen/client-preset": "5.2.4",
+    "@graphql-codegen/introspection": "5.0.1",
     "@parcel/watcher": "^2.5.1",
     "@tauri-apps/cli": "^2.4.0",
     "@tsconfig/node22": "^22.0.0",
